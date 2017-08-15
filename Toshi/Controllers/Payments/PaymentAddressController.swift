@@ -119,14 +119,10 @@ extension PaymentAddressController: ScannerViewControllerDelegate {
     
     public func scannerViewController(_ controller: ScannerViewController, didScanResult result: String) {
         
-        guard let url = URL(string: result) as URL? else { return }
-        let path = url.path
-        
-        if path.hasPrefix("/add") {
-            let username = result.replacingOccurrences(of: QRCodeController.addUsernameBasePath, with: "")
-            let contactName = TokenUser.name(from: username)
+        if let intent = QRCodeIntent(result: result), case .addContact(let username) = intent {
+            let name = TokenUser.name(from: username)
             
-            IDAPIClient.shared.retrieveContact(username: contactName) { [weak self] contact in
+            IDAPIClient.shared.retrieveContact(username: name) { [weak self] contact in
                 guard let contact = contact else {
                     controller.startScanning()
                     
@@ -136,7 +132,7 @@ extension PaymentAddressController: ScannerViewControllerDelegate {
                 self?.addressInputView.paymentAddress = contact.paymentAddress
                 
                 SoundPlayer.playSound(type: .scanned)
-                controller.navigationController?.popViewController(animated: true)
+                controller.dismiss(animated: true, completion: nil)
             }
         }
     }
