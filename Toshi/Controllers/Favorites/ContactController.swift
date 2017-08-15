@@ -377,7 +377,7 @@ public class ContactController: UIViewController {
     }
 
     @objc private func didTapPayButton() {
-        let paymentSendController = PaymentSendController()
+        let paymentSendController = PaymentSendController(withContinueOption: .send)
         paymentSendController.delegate = self
         
         let navigationController = UINavigationController(rootViewController: paymentSendController)

@@ -32,6 +32,7 @@
 "payment_send_prefix" = "Send ";
 "payment_send_description" = "Enter the recipient’s ETH wallet address.";
 "payment_send_button" = "Send";
+"payment_next_button" = "Next";
 "payment_qr_scanner_instructions" = "Scan QR Code";
 
 "payment_message_failure_title" = "Failed";

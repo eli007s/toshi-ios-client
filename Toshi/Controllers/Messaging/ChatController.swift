@@ -892,7 +892,7 @@ extension ChatController: ChatsFloatingHeaderViewDelegate {
         view.layoutIfNeeded()
         controlsViewHeightConstraint?.constant = 0.0
 
-        let paymentSendController = PaymentSendController()
+        let paymentSendController = PaymentSendController(withContinueOption: .send)
         paymentSendController.delegate = self
         
         let navigationController = UINavigationController(rootViewController: paymentSendController)

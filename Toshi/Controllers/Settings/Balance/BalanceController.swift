@@ -61,7 +61,7 @@ extension BalanceController: UITableViewDelegate {
 
         if indexPath.row == 1 {
             
-            let paymentSendController = PaymentSendController()
+            let paymentSendController = PaymentSendController(withContinueOption: .next)
             paymentSendController.delegate = self
             
             let navigationController = PaymentNavigationController(rootViewController: paymentSendController)

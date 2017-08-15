@@ -19,20 +19,38 @@ protocol PaymentSendControllerDelegate: class {
     func paymentSendControllerFinished(with valueInWei: NSDecimalNumber?, for controller: PaymentSendController)
 }
 
+enum PaymentSendContinueOption {
+    case next
+    case send
+}
+
 class PaymentSendController: PaymentController {
     
     weak var delegate: PaymentSendControllerDelegate?
     
-    private lazy var cancelItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelItemTapped(_:)))
-    private lazy var continueItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(continueItemTapped(_:)))
+    var continueOption: PaymentSendContinueOption
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    var rightBarButtonItemTitle: String {
+        
+        switch continueOption {
+        case .next:
+            return Localized("payment_next_button")
+        case .send:
+            return Localized("payment_send_button")
+        }
+    }
+    
+    init(withContinueOption continueOption: PaymentSendContinueOption) {
+        self.continueOption = continueOption
+        super.init(nibName: nil, bundle: nil)
         
         title = Localized("payment_send")
-        
-        navigationItem.leftBarButtonItem = cancelItem
-        navigationItem.rightBarButtonItem = continueItem
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelItemTapped(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarButtonItemTitle, style: .plain, target: self, action: #selector(continueItemTapped(_:)))
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
