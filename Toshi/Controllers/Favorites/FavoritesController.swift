@@ -161,14 +161,6 @@ open class FavoritesController: SweetTableController {
         showOrHideEmptyState()
     }
 
-    open override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
-    open override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
-
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 

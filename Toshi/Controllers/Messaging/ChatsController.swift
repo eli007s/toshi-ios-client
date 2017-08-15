@@ -104,10 +104,6 @@ open class ChatsController: SweetTableController {
         tabBarController?.tabBar.isHidden = false
     }
 
-    open override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
     fileprivate lazy var emptyStateContainerView: UIView = {
         let view = UIView(withAutoLayout: true)
         view.translatesAutoresizingMaskIntoConstraints = false

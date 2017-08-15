@@ -189,10 +189,6 @@ open class ProfileController: UIViewController {
         }
     }
 
-    open override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
     fileprivate func addSubviewsAndConstraints() {
         let margin: CGFloat = 15
         let avatarSize = CGSize(width: 60, height: 60)
