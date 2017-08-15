@@ -19,7 +19,7 @@ import CoreImage
 
 class QRCodeController: UIViewController {
 
-    static let addUsernameBasePath = "https://app.tokenbrowser.com/add/"
+    static let addUsernameBasePath = "https://app.toshi.org/add/"
     static let addUserPath = "/add/"
     static let paymentWithUsernamePath = "/pay/"
     static let paymentWithAddressPath = "/ethereum:"
