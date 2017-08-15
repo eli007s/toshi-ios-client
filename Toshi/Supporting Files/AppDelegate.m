@@ -160,13 +160,21 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 - (void)createNewUser
 {
     __weak typeof(self)weakSelf = self;
-    [[IDAPIClient shared] registerUserIfNeeded:^{
-        typeof(self)strongSelf = weakSelf;
+    [[IDAPIClient shared] registerUserIfNeeded:^(UserRegisterStatus status){
 
-        [[ChatAPIClient shared] registerUser];
+        if (status != UserRegisterStatusFailed) {
 
-        [strongSelf didCreateUser];
-        [strongSelf setupDB];
+            typeof(self)strongSelf = weakSelf;
+
+            [[ChatAPIClient shared] registerUserWithCompletion:^(BOOL success) {
+                if (status == UserRegisterStatusRegistered) {
+                    [ChatsInteractor triggerBotGreeting];
+                }
+            }];
+
+            [strongSelf didCreateUser];
+            [strongSelf setupDB];
+        }
     }];
 }
 

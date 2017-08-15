@@ -758,7 +758,10 @@ extension ChatController: ChatViewModelOutput {
             // If contact is an app, and there are no messages between current user and contact
             // we send the app an empty regular sofa message. This ensures that Signal won't display it,
             // but at the same time, most bots will reply with a greeting.
-            viewModel.interactor.sendMessage(sofaWrapper: SofaMessage(body: ""))
+
+            let initialRequest = SofaInitialRequest(content: ["values": ["paymentAddress", "language"]])
+            let initWrapper = SofaInitialResponse(initialRequest: initialRequest)
+            viewModel.interactor.sendMessage(sofaWrapper: initWrapper)
         }
     }
 }

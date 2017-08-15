@@ -62,6 +62,8 @@
 	<string>Required to upload pictures.</string>
 	<key>TokenChatServiceBaseURL</key>
 	<string>https://token-chat-service-development.herokuapp.com</string>
+	<key>InitialGreetingAddress</key>
+	<string>0xdf0096052836251b0fafd4f0f12771deea5c8748</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SF-UI-Display-Black.otf</string>

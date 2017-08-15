@@ -64,6 +64,8 @@
 	<string>Required to upload pictures.</string>
 	<key>TokenChatServiceBaseURL</key>
 	<string>https://chat.service.tokenbrowser.com</string>
+	<key>InitialGreetingAddress</key>
+	<string>0xdc1eb58ae581c2e70dd5af5c454851fa2b24acd7</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SF-UI-Display-Black.otf</string>

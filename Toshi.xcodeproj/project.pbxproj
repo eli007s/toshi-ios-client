@@ -153,13 +153,27 @@
 		2BE6FB101EFC0CC500B0B848 /* AvatarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE6FB0E1EFC0C1600B0B848 /* AvatarManager.swift */; };
 		339C48D508E325D721B97EA9 /* libPods-CocoaPods-Distribution.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2446336EA68730ACD1CE100D /* libPods-CocoaPods-Distribution.a */; };
 		7EBE06112DBBCDC47098370B /* libPods-CocoaPods-Development.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F1B2E5A8052289054B2DCDD /* libPods-CocoaPods-Development.a */; };
+		8446632B1F41CD5700892DB8 /* PaymentRequestMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446632A1F41CD5700892DB8 /* PaymentRequestMetadata.swift */; };
+		8446632C1F41CD5700892DB8 /* PaymentRequestMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446632A1F41CD5700892DB8 /* PaymentRequestMetadata.swift */; };
+		8446632D1F41CD5700892DB8 /* PaymentRequestMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8446632A1F41CD5700892DB8 /* PaymentRequestMetadata.swift */; };
 		848D82221F23D50900BBFA66 /* NetworkSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9191DC81F2203DD00498A4F /* NetworkSettingsController.swift */; };
 		848D82231F23D50A00BBFA66 /* NetworkSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9191DC81F2203DD00498A4F /* NetworkSettingsController.swift */; };
+		84AED6FB1F42EBCB003C38E8 /* String+Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AED6FA1F42EBCB003C38E8 /* String+Regex.swift */; };
+		84AED6FC1F42EBCB003C38E8 /* String+Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AED6FA1F42EBCB003C38E8 /* String+Regex.swift */; };
+		84AED6FE1F42ED91003C38E8 /* String+Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AED6FA1F42EBCB003C38E8 /* String+Regex.swift */; };
 		84B2E4021EF3F6C3009927B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F9238C21E24F1D2004BEEE0 /* LaunchScreen.storyboard */; };
 		84C1952C1ECF057E00B9512F /* SOFAWebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C1952B1ECF057E00B9512F /* SOFAWebController.swift */; };
 		84C1952F1ECF05C100B9512F /* sofa-web3.js in Resources */ = {isa = PBXBuildFile; fileRef = 84C1952E1ECF05C100B9512F /* sofa-web3.js */; };
 		84C195301ECF05C100B9512F /* sofa-web3.js in Resources */ = {isa = PBXBuildFile; fileRef = 84C1952E1ECF05C100B9512F /* sofa-web3.js */; };
+		84C459021F41B7AA00D534B8 /* QRCodeIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C459011F41B7AA00D534B8 /* QRCodeIntentTests.swift */; };
 		84D678F01EE049930026D7F1 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB842781EDD91F70044BDAB /* SplashViewController.swift */; };
+		84FFE1E41F3C7D09008CEEF2 /* EthereumAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FFE1E31F3C7D09008CEEF2 /* EthereumAddress.swift */; };
+		84FFE1E51F3C7D09008CEEF2 /* EthereumAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FFE1E31F3C7D09008CEEF2 /* EthereumAddress.swift */; };
+		84FFE1E81F3C7F39008CEEF2 /* EthereumAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FFE1E71F3C7F39008CEEF2 /* EthereumAddressTests.swift */; };
+		84FFE1E91F3C82F8008CEEF2 /* EthereumAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FFE1E31F3C7D09008CEEF2 /* EthereumAddress.swift */; };
+		84FFE1EB1F3C8FAF008CEEF2 /* QRCodeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FFE1EA1F3C8FAF008CEEF2 /* QRCodeIntent.swift */; };
+		84FFE1EC1F3C8FAF008CEEF2 /* QRCodeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FFE1EA1F3C8FAF008CEEF2 /* QRCodeIntent.swift */; };
+		84FFE1ED1F3C8FAF008CEEF2 /* QRCodeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FFE1EA1F3C8FAF008CEEF2 /* QRCodeIntent.swift */; };
 		9F04A7231E38D1400043534A /* QRCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F04A7221E38D1400043534A /* QRCodeController.swift */; };
 		9F086CB71EB10A7A00055DB3 /* TokenUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B355BD91EAE356C0093FA8F /* TokenUser.swift */; };
 		9F21625F1E5EF39B00292B14 /* EthereumNotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F21625E1E5EF39B00292B14 /* EthereumNotificationHandler.swift */; };
@@ -1342,8 +1356,14 @@
 		3F0DBA781E2F9F3F471A6BAD /* Pods-CocoaPods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoaPods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CocoaPods-Tests/Pods-CocoaPods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		558646ED17EF64D6287EBF5F /* Pods-CocoaPods-Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoaPods-Development.release.xcconfig"; path = "Pods/Target Support Files/Pods-CocoaPods-Development/Pods-CocoaPods-Development.release.xcconfig"; sourceTree = "<group>"; };
 		7E67E3F2BFB7B0171BF61B30 /* libPods-CocoaPods-Distribution.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CocoaPods-Distribution.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8446632A1F41CD5700892DB8 /* PaymentRequestMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentRequestMetadata.swift; sourceTree = "<group>"; };
+		84AED6FA1F42EBCB003C38E8 /* String+Regex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Regex.swift"; sourceTree = "<group>"; };
 		84C1952B1ECF057E00B9512F /* SOFAWebController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOFAWebController.swift; sourceTree = "<group>"; };
 		84C1952E1ECF05C100B9512F /* sofa-web3.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "sofa-web3.js"; sourceTree = "<group>"; };
+		84C459011F41B7AA00D534B8 /* QRCodeIntentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeIntentTests.swift; sourceTree = "<group>"; };
+		84FFE1E31F3C7D09008CEEF2 /* EthereumAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EthereumAddress.swift; sourceTree = "<group>"; };
+		84FFE1E71F3C7F39008CEEF2 /* EthereumAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EthereumAddressTests.swift; sourceTree = "<group>"; };
+		84FFE1EA1F3C8FAF008CEEF2 /* QRCodeIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeIntent.swift; sourceTree = "<group>"; };
 		9F04A7221E38D1400043534A /* QRCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeController.swift; sourceTree = "<group>"; };
 		9F21625E1E5EF39B00292B14 /* EthereumNotificationHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EthereumNotificationHandler.swift; sourceTree = "<group>"; };
 		9F2162611E5EF76000292B14 /* BackgroundNotificationHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundNotificationHandler.swift; sourceTree = "<group>"; };
@@ -2413,6 +2433,8 @@
 			children = (
 				14147EA51E8119F0006BD47B /* Info.plist */,
 				14147EA31E8119F0006BD47B /* Tests.swift */,
+				84FFE1E71F3C7F39008CEEF2 /* EthereumAddressTests.swift */,
+				84C459011F41B7AA00D534B8 /* QRCodeIntentTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -3538,6 +3560,9 @@
 				9FA12BF11E65D135003705F6 /* SoundPlayer.swift */,
 				9FC72A331E250E2D00EF1141 /* UserBootstrapParameters.swift */,
 				9FCDBAD31E27DE8800A70E07 /* Yap.swift */,
+				84FFE1E31F3C7D09008CEEF2 /* EthereumAddress.swift */,
+				84FFE1EA1F3C8FAF008CEEF2 /* QRCodeIntent.swift */,
+				8446632A1F41CD5700892DB8 /* PaymentRequestMetadata.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3604,6 +3629,7 @@
 				9FEB8C8A1E6832120088D5A6 /* NSData+ows_StripToken.m */,
 				9FAE4A6A1E4CBFC400126217 /* NSDecimalNumber+Additions.swift */,
 				A9E65DCD1E76B4A600304123 /* NSLayoutConstraint+Additions.swift */,
+				84AED6FA1F42EBCB003C38E8 /* String+Regex.swift */,
 				9FD247821ED3037F00A38C40 /* String+isURL.swift */,
 				9F7B896C1E51C6DA009C192E /* TSInteraction+Additions.swift */,
 				9F3FF7FE1EB36122002D0293 /* TSOutgoingMessage+Addtions.h */,
@@ -4344,16 +4370,22 @@
 			files = (
 				E60A52AA1F28DD410032CAC0 /* AvatarManager.swift in Sources */,
 				E60A52A71F28DC5B0032CAC0 /* DevelopmentTokenURLPaths.swift in Sources */,
+				84FFE1E91F3C82F8008CEEF2 /* EthereumAddress.swift in Sources */,
 				E60A52A61F28DC010032CAC0 /* CacheExpiry+Default.swift in Sources */,
 				E60A52AC1F28E0FD0032CAC0 /* Cereal.swift in Sources */,
 				E60A52A91F28DC8D0032CAC0 /* idAPIClient.swift in Sources */,
+				84FFE1E81F3C7F39008CEEF2 /* EthereumAddressTests.swift in Sources */,
 				9FE5338B1F0B9CF100B0C2B5 /* Theme.swift in Sources */,
 				E60A52AF1F28E6A60032CAC0 /* EthereumAPIClient.swift in Sources */,
+				84FFE1ED1F3C8FAF008CEEF2 /* QRCodeIntent.swift in Sources */,
+				84C459021F41B7AA00D534B8 /* QRCodeIntentTests.swift in Sources */,
 				E60A52A51F28DB710032CAC0 /* AppsAPIClient.swift in Sources */,
 				9FE5338A1F0B9CDA00B0C2B5 /* BaseConverter.swift in Sources */,
+				8446632D1F41CD5700892DB8 /* PaymentRequestMetadata.swift in Sources */,
 				E60A52B01F28E6FF0032CAC0 /* NetworkSwitcher.swift in Sources */,
 				9FE533891F0B9CBC00B0C2B5 /* NSDecimalNumber+Additions.swift in Sources */,
 				E60A52B11F28E7830032CAC0 /* Extensions.swift in Sources */,
+				84AED6FE1F42ED91003C38E8 /* String+Regex.swift in Sources */,
 				14147EA41E8119F0006BD47B /* Tests.swift in Sources */,
 				9FE533881F0B9C5500B0C2B5 /* EthereumConverter.swift in Sources */,
 				E60A52AB1F28E0F30032CAC0 /* Yap.swift in Sources */,
@@ -4374,6 +4406,7 @@
 				9F4D80691EEA8B4500FB5361 /* ModernButtonViewModel.m in Sources */,
 				9F4D7FE71EEA8B4500FB5361 /* MediaVideoConverter.m in Sources */,
 				9F4D7F4B1EEA8B4500FB5361 /* PhotoHistogramGenerator.m in Sources */,
+				84FFE1EC1F3C8FAF008CEEF2 /* QRCodeIntent.swift in Sources */,
 				9F4D7F7B1EEA8B4500FB5361 /* ASActor.m in Sources */,
 				9F4D7F851EEA8B4500FB5361 /* AudioWaveform.m in Sources */,
 				9F88EA041EE0402F00267573 /* BackupPhraseView.swift in Sources */,
@@ -4393,6 +4426,7 @@
 				9F4D812B1EEA8B4600FB5361 /* PaintPanGestureRecognizer.m in Sources */,
 				9F4D80611EEA8B4500FB5361 /* MediaPickerGalleryModel.m in Sources */,
 				149F9A621E72E29A00FB74AA /* ProfileEditController.swift in Sources */,
+				84FFE1E51F3C7D09008CEEF2 /* EthereumAddress.swift in Sources */,
 				9F4D802B1EEA8B4500FB5361 /* VTPlayer.m in Sources */,
 				9F4D80671EEA8B4500FB5361 /* MediaPickerGalleryVideoItem.m in Sources */,
 				9F4D80C71EEA8B4500FB5361 /* MediaAssetsPhotoCell.m in Sources */,
@@ -4577,6 +4611,7 @@
 				A997B1011EF94B4F00A143FE /* AddMoneyItem.swift in Sources */,
 				848D82231F23D50A00BBFA66 /* NetworkSettingsController.swift in Sources */,
 				9F4D80AF1EEA8B4500FB5361 /* DraggableCollectionViewFlowLayout.m in Sources */,
+				84AED6FC1F42EBCB003C38E8 /* String+Regex.swift in Sources */,
 				9F4D7F3D1EEA8B4500FB5361 /* PhotoEnhanceInterpolationFilter.m in Sources */,
 				149F9A7A1E72E29A00FB74AA /* FavoritesController.swift in Sources */,
 				9F4D7EF31EEA8B4500FB5361 /* CurvesTool.m in Sources */,
@@ -4588,6 +4623,7 @@
 				9F4D7EF71EEA8B4500FB5361 /* ExposureTool.m in Sources */,
 				9F4D7EE71EEA8B4500FB5361 /* TGMediaAvatarMenuMixin.m in Sources */,
 				9F4D816F1EEA8B4600FB5361 /* PhotoTextSettingsView.m in Sources */,
+				8446632C1F41CD5700892DB8 /* PaymentRequestMetadata.swift in Sources */,
 				9F4D7F511EEA8B4500FB5361 /* PhotoPaintColorPicker.m in Sources */,
 				9F4D80D91EEA8B4500FB5361 /* MediaPickerGalleryVideoItemView.m in Sources */,
 				9F54A7241E951F1500FEB67B /* RatingsClient.swift in Sources */,
@@ -4982,6 +5018,7 @@
 				9F4D7FFE1EEA8B4500FB5361 /* PhotoCaptionInputMixin.m in Sources */,
 				9F4D7EBC1EEA8B4500FB5361 /* MediaGroupsController.m in Sources */,
 				9F4D7F9E1EEA8B4500FB5361 /* DocumentAttributeImageSize.m in Sources */,
+				84AED6FB1F42EBCB003C38E8 /* String+Regex.swift in Sources */,
 				9F4D80D81EEA8B4500FB5361 /* MediaPickerGalleryVideoItemView.m in Sources */,
 				9F4D80AE1EEA8B4500FB5361 /* DraggableCollectionViewFlowLayout.m in Sources */,
 				9F4D7ED81EEA8B4500FB5361 /* PhotoEditorTabController.m in Sources */,
@@ -5068,6 +5105,7 @@
 				9F4D7F6E1EEA8B4500FB5361 /* VideoEditAdjustments.m in Sources */,
 				9F4D7F3E1EEA8B4500FB5361 /* PhotoEnhanceLUTGenerator.m in Sources */,
 				9F4D7FB01EEA8B4500FB5361 /* Freedom.mm in Sources */,
+				84FFE1EB1F3C8FAF008CEEF2 /* QRCodeIntent.swift in Sources */,
 				9F4D817C1EEA8B4600FB5361 /* VTPlayerView.m in Sources */,
 				9F4D7ED01EEA8B4500FB5361 /* PhotoCropController.m in Sources */,
 				9F4D7F181EEA8B4500FB5361 /* PaintShader.m in Sources */,
@@ -5246,6 +5284,7 @@
 				E6B8577A1F25F3D700979650 /* AddressChangeAlertController.swift in Sources */,
 				9F4D80301EEA8B4500FB5361 /* midl.c in Sources */,
 				9F4D816A1EEA8B4600FB5361 /* PhotoPaintSparseView.m in Sources */,
+				84FFE1E41F3C7D09008CEEF2 /* EthereumAddress.swift in Sources */,
 				9F4D7F6C1EEA8B4500FB5361 /* TintTool.m in Sources */,
 				9F4D7ED21EEA8B4500FB5361 /* PhotoDummyController.m in Sources */,
 				A90E5A291F03CE0400DAA501 /* BrowseAppCell.swift in Sources */,
@@ -5355,6 +5394,7 @@
 				9F4D7FF61EEA8B4500FB5361 /* NSValue+JNWAdditions.m in Sources */,
 				9F4D80901EEA8B4500FB5361 /* AttachmentVideoCell.m in Sources */,
 				9F4D7F8E1EEA8B4500FB5361 /* CameraMovieWriter.m in Sources */,
+				8446632B1F41CD5700892DB8 /* PaymentRequestMetadata.swift in Sources */,
 				9F4D7EDA1EEA8B4500FB5361 /* PhotoPaintController.m in Sources */,
 				143186B91E49C4EA0025E9B7 /* AppsAPIClient.swift in Sources */,
 				A9191DCA1F2203DD00498A4F /* AdvancedSettingsController.swift in Sources */,

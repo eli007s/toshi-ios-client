@@ -21,7 +21,7 @@ protocol ChatInteractorOutput: class {
     func didFinishRequest()
 }
 
-final class ChatsInteractor {
+final class ChatsInteractor: NSObject {
 
     fileprivate weak var output: ChatInteractorOutput?
     private(set) var thread: TSThread
@@ -185,9 +185,9 @@ final class ChatsInteractor {
         if let message = interaction as? TSMessage, shouldProcessCommands {
             let type = SofaType(sofa: message.body)
             switch type {
-            case .metadataRequest:
-                let metadataResponse = SofaMetadataResponse(metadataRequest: SofaMetadataRequest(content: message.body ?? ""))
-                sendMessage(sofaWrapper: metadataResponse)
+            case .initialRequest:
+                let initialResponse = SofaInitialResponse(initialRequest: SofaInitialRequest(content: message.body ?? ""))
+                sendMessage(sofaWrapper: initialResponse)
             default:
                 break
             }
@@ -271,6 +271,17 @@ final class ChatsInteractor {
         }
 
         return thread!
+    }
+
+    static func triggerBotGreeting() {
+        guard let botAddress = Bundle.main.infoDictionary?["InitialGreetingAddress"] as? String else { return }
+
+        let botThread = ChatsInteractor.getOrCreateThread(for: botAddress)
+        let interactor = ChatsInteractor(output: nil, thread: botThread)
+
+        let initialRequest = SofaInitialRequest(content: ["values": ["paymentAddress", "language"]])
+        let initWrapper = SofaInitialResponse(initialRequest: initialRequest)
+        interactor.sendMessage(sofaWrapper: initWrapper)
     }
 
     fileprivate static func requestContactsRefresh() {

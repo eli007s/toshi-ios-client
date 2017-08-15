@@ -19,8 +19,8 @@ import Foundation
     static let none = SofaType.none.rawValue
     static let message = SofaType.message.rawValue
     static let command = SofaType.command.rawValue
-    static let metadataRequest = SofaType.metadataRequest.rawValue
-    static let metadataResponse = SofaType.metadataResponse.rawValue
+    static let initialRequest = SofaType.initialRequest.rawValue
+    static let initialResponse = SofaType.initialResponse.rawValue
     static let paymentRequest = SofaType.paymentRequest.rawValue
     static let payment = SofaType.payment.rawValue
 }
@@ -29,8 +29,8 @@ public enum SofaType: String {
     case none = ""
     case message = "SOFA::Message:"
     case command = "SOFA::Command:"
-    case metadataRequest = "SOFA::InitRequest:"
-    case metadataResponse = "SOFA::Init:"
+    case initialRequest = "SOFA::InitRequest:"
+    case initialResponse = "SOFA::Init:"
     case paymentRequest = "SOFA::PaymentRequest:"
     case payment = "SOFA::Payment:"
 
@@ -45,10 +45,10 @@ public enum SofaType: String {
             self = .message
         } else if sofa.hasPrefix(SofaType.command.rawValue) {
             self = .command
-        } else if sofa.hasPrefix(SofaType.metadataRequest.rawValue) {
-            self = .metadataRequest
-        } else if sofa.hasPrefix(SofaType.metadataResponse.rawValue) {
-            self = .metadataResponse
+        } else if sofa.hasPrefix(SofaType.initialRequest.rawValue) {
+            self = .initialRequest
+        } else if sofa.hasPrefix(SofaType.initialResponse.rawValue) {
+            self = .initialResponse
         } else if sofa.hasPrefix(SofaType.paymentRequest.rawValue) {
             self = .paymentRequest
         } else if sofa.hasPrefix(SofaType.payment.rawValue) {
@@ -86,10 +86,10 @@ open class SofaWrapper: SofaWrapperProtocol {
             return SofaMessage(content: content)
         case .command:
             return SofaCommand(content: content)
-        case .metadataRequest:
-            return SofaMetadataRequest(content: content)
-        case .metadataResponse:
-            return SofaMetadataResponse(content: content)
+        case .initialRequest:
+            return SofaInitialRequest(content: content)
+        case .initialResponse:
+            return SofaInitialResponse(content: content)
         case .paymentRequest:
             return SofaPaymentRequest(content: content)
         case .payment:
@@ -246,9 +246,9 @@ open class SofaCommand: SofaWrapper {
 
 /// App receives that with list of values it needs to continue.
 /// Answered with a SOFA::Init message (SofaMetadataResponse).
-open class SofaMetadataRequest: SofaWrapper {
+open class SofaInitialRequest: SofaWrapper {
     public override var type: SofaType {
-        return .metadataRequest
+        return .initialRequest
     }
 
     open lazy var values: [String] = {
@@ -265,15 +265,15 @@ open class SofaMetadataRequest: SofaWrapper {
 }
 
 // Each key is a value that came from the init request as stated above.
-// Example: SofaMetadataResponse(contant: ["paymentAddress": "0xa2a0134f1df987bc388dbcb635dfeed4ce497e2a", "language": "en"])
-open class SofaMetadataResponse: SofaWrapper {
+// Example: SofaInitialResponse(contant: ["paymentAddress": "0xa2a0134f1df987bc388dbcb635dfeed4ce497e2a", "language": "en"])
+open class SofaInitialResponse: SofaWrapper {
     public override var type: SofaType {
-        return .metadataResponse
+        return .initialResponse
     }
 
-    public convenience init(metadataRequest: SofaMetadataRequest) {
+    public convenience init(initialRequest: SofaInitialRequest) {
         var response = [String: Any]()
-        for value in metadataRequest.values {
+        for value in initialRequest.values {
             if value == "paymentAddress" {
                 response[value] = TokenUser.current?.paymentAddress ?? ""
             } else if value == "language" {
