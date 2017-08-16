@@ -11,7 +11,7 @@ abstract_target 'CocoaPods' do
   pod 'Fabric'
   pod 'Crashlytics'
   pod 'SwiftLint'
-  
+
   target 'Development' do
       
   end

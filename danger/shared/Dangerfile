@@ -92,9 +92,4 @@ files_to_check = (git.modified_files + git.added_files).uniq
 			end
 		end 
 	end
-
-	## Check wether our file is larger than 200 lines and doesn't include any Marks
-	if filelines.count > 200 and foundMark == false 
-		warn("Consider to place some `MARK:` lines for files over 200 lines big.")
-	end
 end

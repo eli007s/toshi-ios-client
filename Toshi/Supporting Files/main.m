@@ -16,9 +16,15 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+#import "TestAppDelegate.h"
 
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
     @autoreleasepool {
+        BOOL runningTests = NSClassFromString(@"XCTestCase") != nil;
+        if(runningTests) {
+            return UIApplicationMain(argc, argv, nil, NSStringFromClass([TestAppDelegate class]));
+        }
+
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }
 }

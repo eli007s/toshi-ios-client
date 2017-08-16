@@ -1,9 +1,18 @@
 {
-  "commitish" : "12d290e608d6da68d4956c265740621ce7d44f56",
   "iOS" : [
     {
-      "hash" : "88481bb91771d92c593c496348f087379c2ac3e27d5726e78fb625621c5b43cc",
+      "hash" : "2040bb66445973615ac196288979579cc05211ac8134398149a0f77e6b2a50f6",
       "name" : "Formulaic"
     }
+  ],
+  "commitish" : "12d290e608d6da68d4956c265740621ce7d44f56",
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
+  "Mac" : [
+
   ]
 }

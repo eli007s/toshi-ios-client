@@ -22,7 +22,7 @@ public class EtherealCereal: NSObject {
 
     fileprivate var _privateKeyData: Data?
 
-    public var privateKeyData: Data {
+    public var privateKeyData: Data  {
         get {
             if let _privateKeyData = self._privateKeyData {
                 return _privateKeyData
@@ -51,8 +51,9 @@ public class EtherealCereal: NSObject {
         return self.ether.generatePublicKey(from: privateKeyData)
     }
 
+
     /// Cryptocurrencies require a very safely kept private key to sign transactions.
-    /// This is used to guarantee that the user is who they say they are.
+    /// This is used to guarantee that the user is who they say they are. 
     /// It's defined for Ethereum as a random, high-entropy 32-byte string.
     /// On iOS the safest way to create this is by using SecRandomCopyBytes() to generate it from /dev/random.
     /// For more information on the /dev/random random-number generator, see the manual page for random(4).
@@ -68,9 +69,10 @@ public class EtherealCereal: NSObject {
         }
 
         guard result == 0 else { fatalError("Failed to randomly generate and copy bytes for private key generation. SecRandomCopyBytes error code: (\(result)).") }
-
+        
         return privateKey
     }
+
 
     /// Returns a KECCAK-256 encoded in base64.
     ///
@@ -118,7 +120,7 @@ public extension Data {
 public extension String {
     public var hexadecimalData: Data? {
         let utf16 = self.replacingOccurrences(of: "0x", with: "").utf16
-        guard let data = NSMutableData(capacity: utf16.count / 2) else { return nil }
+        guard let data = NSMutableData(capacity: utf16.count/2) else { return nil }
 
         var byteChars: [CChar] = [0, 0, 0]
         var wholeByte: CUnsignedLong = 0

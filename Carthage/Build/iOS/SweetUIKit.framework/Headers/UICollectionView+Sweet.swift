@@ -7,7 +7,7 @@ public extension UICollectionView {
     }
 
     public func registerNib(_ cellClass: UICollectionViewCell.Type) {
-        self.register(UINib(nibName: cellClass.reuseIdentifier, bundle: nil), forCellWithReuseIdentifier: cellClass.reuseIdentifier)
+        self.register(UINib.init(nibName: cellClass.reuseIdentifier, bundle: nil), forCellWithReuseIdentifier: cellClass.reuseIdentifier)
     }
 
     public func register(_ supplementaryViewClass: UICollectionReusableView.Type, ofKind kind: String) {

@@ -1,9 +1,18 @@
 {
-  "commitish" : "1.1.0",
   "iOS" : [
     {
-      "hash" : "85c84cda4aedb1375094faae7286ee6035d311c2437b55b8f44e626359f2991c",
+      "hash" : "186bf340274f45737b88525fcbcd482345b845b4fc5b73e19763fb597be91a34",
       "name" : "BouncyLayout"
     }
+  ],
+  "commitish" : "fb889d9721cad687078f617e410158dcf64cd2d9",
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
+  "Mac" : [
+
   ]
 }

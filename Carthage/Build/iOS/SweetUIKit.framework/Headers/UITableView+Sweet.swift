@@ -7,7 +7,7 @@ public extension UITableView {
     }
 
     public func registerNib(_ cellClass: UITableViewCell.Type) {
-        self.register(UINib(nibName: String(describing: cellClass), bundle: nil), forCellReuseIdentifier: cellClass.reuseIdentifier)
+        self.register(UINib.init(nibName: String(describing: cellClass), bundle: nil), forCellReuseIdentifier: cellClass.reuseIdentifier)
     }
 
     public func registerHeaderFooter(_ viewClass: UITableViewHeaderFooterView.Type) {

@@ -46,9 +46,11 @@ public extension IndexPath {
     public func totalRowCount(collectionView: UICollectionView) -> Int {
         var count = 0
         let sections = collectionView.numberOfSections
-        for section in 0 ..< sections where section < self.section {
-            let rows = collectionView.numberOfItems(inSection: section)
-            count += rows
+        for section in 0 ..< sections {
+            if section < self.section {
+                let rows = collectionView.numberOfItems(inSection: section)
+                count += rows
+            }
         }
 
         return count + self.row

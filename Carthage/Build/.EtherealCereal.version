@@ -1,9 +1,18 @@
 {
-  "commitish" : "0.0.3",
   "iOS" : [
     {
-      "hash" : "b38dd5032dbbfbf938dc7543b3d8fd19cb1696fd784525c2fe3e9a2e2422c8b8",
+      "hash" : "c29a25a782d87dc839b23d54ea925f26b2de5d48bb5589327fa34d499b237fd0",
       "name" : "EtherealCereal"
     }
+  ],
+  "commitish" : "0.0.3",
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
+  "Mac" : [
+
   ]
 }

@@ -36,7 +36,7 @@ public extension UIView {
             self.topAnchor.constraint(equalTo: superview.topAnchor, constant: insets.top),
             self.leftAnchor.constraint(equalTo: superview.leftAnchor, constant: insets.left),
             self.rightAnchor.constraint(equalTo: superview.rightAnchor, constant: -insets.right),
-            self.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -insets.bottom)
+            self.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -insets.bottom),
         ]
 
         constants.forEach { constant in

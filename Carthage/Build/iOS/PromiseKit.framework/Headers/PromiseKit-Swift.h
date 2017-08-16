@@ -188,7 +188,7 @@ SWIFT_CLASS_NAMED("AnyPromise")
 /// A new promise.
 + (AnyPromise * _Nonnull)promiseWithResolverBlock:(SWIFT_NOESCAPE void (^ _Nonnull)(void (^ _Nonnull)(id _Nullable)))body SWIFT_WARN_UNUSED_RESULT;
 - (AnyPromise * _Nonnull)__thenOn:(dispatch_queue_t _Nonnull)q execute:(id _Nullable (^ _Nonnull)(id _Nullable))body SWIFT_WARN_UNUSED_RESULT;
-- (AnyPromise * _Nonnull)__catchWithPolicy:(PMKCatchPolicy)policy execute:(id _Nullable (^ _Nonnull)(id _Nullable))body SWIFT_WARN_UNUSED_RESULT;
+- (AnyPromise * _Nonnull)__catchOn:(dispatch_queue_t _Nonnull)q withPolicy:(PMKCatchPolicy)policy execute:(id _Nullable (^ _Nonnull)(id _Nullable))body SWIFT_WARN_UNUSED_RESULT;
 - (AnyPromise * _Nonnull)__alwaysOn:(dispatch_queue_t _Nonnull)q execute:(void (^ _Nonnull)(void))body SWIFT_WARN_UNUSED_RESULT;
 /// used by PMKWhen and PMKJoin
 - (void)__pipe:(void (^ _Nonnull)(id _Nullable))body;
