@@ -373,10 +373,10 @@ public class ContactController: UIViewController {
     }
 
     @objc private func didTapPayButton() {
-        let paymentSendController = PaymentSendController(withContinueOption: .send)
-        paymentSendController.delegate = self
+        let paymentController = PaymentController(withPaymentType: .send, continueOption: .send)
+        paymentController.delegate = self
 
-        let navigationController = UINavigationController(rootViewController: paymentSendController)
+        let navigationController = UINavigationController(rootViewController: paymentController)
         Navigator.presentModally(navigationController)
     }
 
@@ -441,9 +441,10 @@ extension ContactController: RateUserControllerDelegate {
     }
 }
 
-extension ContactController: PaymentSendControllerDelegate {
+extension ContactController: PaymentControllerDelegate {
 
-    func paymentSendControllerFinished(with valueInWei: NSDecimalNumber?, for controller: PaymentSendController) {
+    func paymentControllerFinished(with valueInWei: NSDecimalNumber?, for controller: PaymentController) {
+        
         defer { dismiss(animated: true) }
         guard let value = valueInWei else { return }
 

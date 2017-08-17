@@ -15,8 +15,45 @@
 
 import UIKit
 
-class PaymentController: UIViewController {
+protocol PaymentControllerDelegate: class {
+    func paymentControllerFinished(with valueInWei: NSDecimalNumber?, for controller: PaymentController)
+}
 
+enum PaymentControllerPaymentType {
+    case request
+    case send
+    
+    var title: String {
+        switch self {
+        case .request:
+            return Localized("payment_request")
+        case .send:
+            return Localized("payment_send")
+        }
+    }
+}
+
+enum PaymentControllerContinueOption {
+    case next
+    case send
+    
+    var buttonTitle: String {
+        switch self {
+        case .next:
+            return Localized("payment_next_button")
+        case .send:
+            return Localized("payment_send_button")
+        }
+    }
+}
+
+class PaymentController: UIViewController {
+    
+    weak var delegate: PaymentControllerDelegate?
+    
+    var paymentType: PaymentControllerPaymentType
+    var continueOption: PaymentControllerContinueOption
+    
     var valueInWei: NSDecimalNumber?
 
     lazy var currencyNumberFormatter: NumberFormatter = {
@@ -27,13 +64,21 @@ class PaymentController: UIViewController {
 
         return formatter
     }()
-
+    
     lazy var inputNumberFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = 2
-
+        
         return formatter
+    }()
+    
+    lazy var outputNumberFormatter: NumberFormatter = {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
+        
+        return numberFormatter
     }()
 
     lazy var shadowTextField: UITextField = {
@@ -72,11 +117,21 @@ class PaymentController: UIViewController {
     fileprivate lazy var networkView: ActiveNetworkView = {
         self.defaultActiveNetworkView()
     }()
-
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .default
+    
+    init(withPaymentType paymentType: PaymentControllerPaymentType, continueOption: PaymentControllerContinueOption) {
+        self.paymentType = paymentType
+        self.continueOption = continueOption
+        super.init(nibName: nil, bundle: nil)
+        
+        title = paymentType.title
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelItemTapped(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: continueOption.buttonTitle, style: .plain, target: self, action: #selector(continueItemTapped(_:)))
     }
-
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -88,12 +143,13 @@ class PaymentController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        navigationItem.backBarButtonItem = UIBarButtonItem.back
         shadowTextField.becomeFirstResponder()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        
         shadowTextField.resignFirstResponder()
     }
 
@@ -113,6 +169,18 @@ class PaymentController: UIViewController {
         etherAmountLabel.rightAnchor.constraint(equalTo: currencyAmountLabel.rightAnchor).isActive = true
 
         setupActiveNetworkView()
+    }
+    
+    func cancelItemTapped(_ item: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func continueItemTapped(_ item: UIBarButtonItem) {
+        delegate?.paymentControllerFinished(with: valueInWei, for: self)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .default
     }
 }
 

@@ -884,10 +884,10 @@ extension ChatController: ChatsFloatingHeaderViewDelegate {
 
     func messagesFloatingView(_: ChatsFloatingHeaderView, didPressRequestButton _: UIButton) {
         
-        let paymentRequestController = PaymentRequestController()
-        paymentRequestController.delegate = self
+        let paymentController = PaymentController(withPaymentType: .request, continueOption: .next)
+        paymentController.delegate = self
         
-        let navigationController = PaymentNavigationController(rootViewController: paymentRequestController)
+        let navigationController = PaymentNavigationController(rootViewController: paymentController)
         Navigator.presentModally(navigationController)
     }
 
@@ -895,43 +895,35 @@ extension ChatController: ChatsFloatingHeaderViewDelegate {
         view.layoutIfNeeded()
         controlsViewHeightConstraint?.constant = 0.0
 
-        let paymentSendController = PaymentSendController(withContinueOption: .send)
-        paymentSendController.delegate = self
+        let paymentController = PaymentController(withPaymentType: .send, continueOption: .send)
+        paymentController.delegate = self
         
-        let navigationController = UINavigationController(rootViewController: paymentSendController)
+        let navigationController = PaymentNavigationController(rootViewController: paymentController)
         Navigator.presentModally(navigationController)
     }
 }
 
-extension ChatController: PaymentSendControllerDelegate {
-    
-    func paymentSendControllerFinished(with valueInWei: NSDecimalNumber?, for controller: PaymentSendController) {
+extension ChatController: PaymentControllerDelegate {
+
+    func paymentControllerFinished(with valueInWei: NSDecimalNumber?, for controller: PaymentController) {
         defer { dismiss(animated: true) }
-        guard let value = valueInWei else { return }
-
-        showActivityIndicator()
-        viewModel.interactor.sendPayment(in: value)
-    }
-}
-
-extension ChatController: PaymentRequestControllerDelegate {
-
-    func paymentRequestControllerDidFinish(valueInWei: NSDecimalNumber?) {
-        defer {
-            self.dismiss(animated: true)
-        }
-
         guard let valueInWei = valueInWei else { return }
-
-        let request: [String: Any] = [
-            "body": "Request for \(EthereumConverter.balanceAttributedString(forWei: valueInWei, exchangeRate: EthereumAPIClient.shared.exchangeRate).string).",
-            "value": valueInWei.toHexString,
-            "destinationAddress": Cereal.shared.paymentAddress
-        ]
-
-        let paymentRequest = SofaPaymentRequest(content: request)
-
-        viewModel.interactor.sendMessage(sofaWrapper: paymentRequest)
+        
+        switch controller.paymentType {
+        case .request:
+            let request: [String: Any] = [
+                "body": "Request for \(EthereumConverter.balanceAttributedString(forWei: valueInWei, exchangeRate: EthereumAPIClient.shared.exchangeRate).string).",
+                "value": valueInWei.toHexString,
+                "destinationAddress": Cereal.shared.paymentAddress
+            ]
+            
+            let paymentRequest = SofaPaymentRequest(content: request)
+            viewModel.interactor.sendMessage(sofaWrapper: paymentRequest)
+            
+        case .send:
+            showActivityIndicator()
+            viewModel.interactor.sendPayment(in: valueInWei)
+        }
     }
 }
 

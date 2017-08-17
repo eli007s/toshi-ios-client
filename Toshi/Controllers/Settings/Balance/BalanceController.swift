@@ -61,10 +61,10 @@ extension BalanceController: UITableViewDelegate {
 
         if indexPath.row == 1 {
             
-            let paymentSendController = PaymentSendController(withContinueOption: .next)
-            paymentSendController.delegate = self
+            let paymentController = PaymentController(withPaymentType: .send, continueOption: .next)
+            paymentController.delegate = self
             
-            let navigationController = PaymentNavigationController(rootViewController: paymentSendController)
+            let navigationController = PaymentNavigationController(rootViewController: paymentController)
             Navigator.presentModally(navigationController)
             
         } else if indexPath.row == 2 {
@@ -107,10 +107,9 @@ extension BalanceController: UITableViewDataSource {
     }
 }
 
-extension BalanceController: PaymentSendControllerDelegate {
+extension BalanceController: PaymentControllerDelegate {
     
-    func paymentSendControllerFinished(with valueInWei: NSDecimalNumber?, for controller: PaymentSendController) {
-        
+    func paymentControllerFinished(with valueInWei: NSDecimalNumber?, for controller: PaymentController) {
         guard let valueInWei = valueInWei else { return }
         
         let paymentAddressController = PaymentAddressController(with: valueInWei)
