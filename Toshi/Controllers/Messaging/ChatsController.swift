@@ -131,10 +131,10 @@ open class ChatsController: SweetTableController {
 
         // If changes do not affect current view, update and return without updating collection view
         // swiftlint:disable force_cast
-        let viewConnection = uiDatabaseConnection.ext(TSThreadDatabaseViewExtensionName) as! YapDatabaseViewConnection
+        let threadViewConnection = uiDatabaseConnection.ext(TSThreadDatabaseViewExtensionName) as! YapDatabaseViewConnection
         // swiftlint:enable force_cast
 
-        let hasChangesForCurrentView = viewConnection.hasChanges(for: notifications)
+        let hasChangesForCurrentView = threadViewConnection.hasChanges(for: notifications)
         if !hasChangesForCurrentView {
             uiDatabaseConnection.read { transaction in
                 self.mappings.update(with: transaction)
@@ -143,7 +143,7 @@ open class ChatsController: SweetTableController {
             return
         }
 
-        let yapDatabaseChanges = viewConnection.getChangesFor(notifications: notifications, with: mappings)
+        let yapDatabaseChanges = threadViewConnection.getChangesFor(notifications: notifications, with: mappings)
         let isDatabaseChanged = yapDatabaseChanges.rowChanges.count != 0 || yapDatabaseChanges.sectionChanges.count != 0
 
         guard isDatabaseChanged else { return }
