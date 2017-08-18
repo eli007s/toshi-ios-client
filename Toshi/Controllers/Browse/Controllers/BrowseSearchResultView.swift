@@ -75,8 +75,12 @@ extension BrowseSearchResultView: UITableViewDataSource {
             cell.usernameLabel.text = item.isApp ? item.category : item.username
             cell.nameLabel.text = item.name
 
-            if let url = URL(string: item.avatarPath) {
-                cell.avatarImageView.setImage(from: AsyncImageURL(url: url))
+            if let avatarPath = item.avatarPath as String? {
+                AvatarManager.shared.avatar(for: avatarPath, completion: { image, path in
+                    if avatarPath == path {
+                        cell.avatarImageView.image = image
+                    }
+                })
             }
         }
 

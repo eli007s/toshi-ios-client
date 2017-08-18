@@ -92,7 +92,9 @@ open class SettingsController: UITableViewController {
     private var balance: NSDecimalNumber?
 
     static func instantiateFromNib() -> SettingsController {
-        return UIStoryboard(name: "Settings", bundle: nil).instantiateInitialViewController() as! SettingsController
+        guard let settingsController = UIStoryboard(name: "Settings", bundle: nil).instantiateInitialViewController() as? SettingsController else { fatalError("Storyboard named 'Settings' should be provided in application") }
+        
+        return  settingsController
     }
 
     private init() {
@@ -140,9 +142,9 @@ open class SettingsController: UITableViewController {
 
     fileprivate func updateAvatar() {
         if let avatarPath = TokenUser.current?.avatarPath as String? {
-            AvatarManager.shared.avatar(for: avatarPath) { image, _ in
+            AvatarManager.shared.avatar(for: avatarPath) { [weak self] image, _ in
                 if image != nil {
-                    self.userAvatarImageVIew.image = image
+                    self?.userAvatarImageVIew.image = image
                 }
             }
         }

@@ -137,7 +137,12 @@ public class EthereumAPIClient: NSObject {
                         print(response)
                         print(json ?? "")
                         print(error)
-                        let json = RequestParameter((json!.dictionary!["errors"] as! [[String: Any]]).first!)
+                        guard let jsonError = (json?.dictionary?["errors"] as? [[String: Any]])?.first else {
+                            completion(nil, error)
+                            return
+                        }
+                        
+                        let json = RequestParameter(jsonError)
                         completion(json, error)
                     }
                 }

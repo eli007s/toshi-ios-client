@@ -173,9 +173,9 @@ public class TokenUser: NSObject, NSCoding {
 
     func update(json: [String: Any], updateAvatar _: Bool = false, shouldSave: Bool = true) {
         isPublic = json[Constants.isPublic] as? Bool ?? isPublic
-        address = json[Constants.address] as! String
-        paymentAddress = (json[Constants.paymentAddress] as? String) ?? (json[Constants.address] as! String)
-        username = json[Constants.username] as! String
+        address = json[Constants.address] as? String ?? address
+        paymentAddress = (json[Constants.paymentAddress] as? String) ?? address
+        username = json[Constants.username] as? String ?? username
         name = json[Constants.name] as? String ?? name
         location = json[Constants.location] as? String ?? location
         about = json[Constants.about] as? String ?? about

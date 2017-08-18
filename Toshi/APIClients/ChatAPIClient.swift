@@ -26,8 +26,9 @@ public class ChatAPIClient: NSObject {
     public var baseURL: URL
 
     private override init() {
-        let tokenChatServiceBaseURL = Bundle.main.object(forInfoDictionaryKey: "TokenChatServiceBaseURL") as! String
-        baseURL = URL(string: tokenChatServiceBaseURL)!
+        guard let tokenChatServiceBaseURL = Bundle.main.object(forInfoDictionaryKey: "TokenChatServiceBaseURL") as? String, let url = URL(string: tokenChatServiceBaseURL) else { fatalError("TokenChatServiceBaseURL should be provided")}
+
+        baseURL = url
         teapot = Teapot(baseURL: baseURL)
 
         super.init()

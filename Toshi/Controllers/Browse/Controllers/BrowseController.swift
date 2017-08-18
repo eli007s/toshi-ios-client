@@ -59,9 +59,6 @@ class BrowseController: SearchableCollectionController {
     }()
 
     fileprivate lazy var openButtonAttributes: [String: Any] = {
-        let paragraph = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-        paragraph.alignment = .left
-
         return [NSForegroundColorAttributeName: Theme.tintColor, NSFontAttributeName: Theme.regular(size: 14)]
     }()
 
@@ -99,8 +96,6 @@ class BrowseController: SearchableCollectionController {
         searchField?.backgroundColor = Theme.inputFieldBackgroundColor
 
         addSubviewsAndConstraints()
-
-        loadItems()
     }
 
     private func addSubviewsAndConstraints() {
@@ -123,7 +118,8 @@ class BrowseController: SearchableCollectionController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        collectionView.reloadData()
+        loadItems()
+
         collectionView.collectionViewLayout.invalidateLayout()
 
         if let indexPathForSelectedRow = searchResultView.indexPathForSelectedRow {
@@ -284,8 +280,12 @@ extension BrowseController: UISearchBarDelegate {
                     cell.nameLabel.text = item.isApp ? item.category : item.username
                 }
 
-                if let url = URL(string: item.avatarPath) {
-                    cell.avatarImageView.setImage(from: AsyncImageURL(url: url))
+                if let avatarPath = item.avatarPath as String? {
+                    AvatarManager.shared.avatar(for: avatarPath, completion: { image, path in
+                        if avatarPath == path {
+                            cell.avatarImageView.image = image
+                        }
+                    })
                 }
 
                 if let averageRating = item.averageRating {

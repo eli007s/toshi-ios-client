@@ -34,7 +34,7 @@ class MessagesBasicCell: UITableViewCell {
 
     private(set) lazy var avatarImageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleAspectFit
+        view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.layer.cornerRadius = 18
 

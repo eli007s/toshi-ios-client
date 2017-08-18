@@ -120,16 +120,16 @@ open class SofaMessage: SofaWrapper {
             case group
         }
 
-        open var type: ControlType
+        open var type: ControlType = .button
 
-        private var _label: String
+        private var _label: String?
 
-        open var label: String {
+        open var label: String? {
             switch self.type {
             case .button:
                 return self._label
             case .group:
-                return self._label.appending(" ▴")
+                return self._label?.appending(" ▴")
             }
         }
 
@@ -142,8 +142,11 @@ open class SofaMessage: SofaWrapper {
         open var subcontrols: [Button] = []
 
         public init(json: [String: Any]) {
-            type = ControlType(rawValue: json["type"] as! String)!
-            _label = json["label"] as! String
+            if let jsonType = json["type"] as? String {
+                type = ControlType(rawValue: jsonType) ?? .button
+            }
+            
+            _label = json["label"] as? String
 
             switch type {
             case .button:
@@ -154,7 +157,7 @@ open class SofaMessage: SofaWrapper {
                     self.action = action
                 }
             case .group:
-                let controls = json["controls"] as! [[String: Any]]
+                guard let controls = json["controls"] as? [[String: Any]] else { return }
                 subcontrols = controls.map { (control) -> Button in
                     return Button(json: control)
                 }

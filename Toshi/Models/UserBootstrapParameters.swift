@@ -80,6 +80,8 @@ public class UserBootstrapParameter {
         return payload
     }()
 
+    // swiftlint:disable force_cast
+    // Because this method relies heavily on obj-c classes, we need to force cast some values here.
     init() {
         let identityManager = OWSIdentityManager.shared()
 
@@ -93,19 +95,18 @@ public class UserBootstrapParameter {
 
         identityKey = ((identityKeyPair.publicKey() as NSData).prependKeyType() as Data).base64EncodedString()
         lastResortPreKey = storageManager.getOrGenerateLastResortKey()
+
         prekeys = storageManager.generatePreKeyRecords() as! [PreKeyRecord]
 
         registrationId = TSAccountManager.getOrGenerateRegistrationId()
 
         signalingKey = CryptoTools.generateSecureRandomData(52).base64EncodedString()
 
-        let keyPair = Curve25519.generateKeyPair()!
-        let keyToSign = (keyPair.publicKey() as NSData).prependKeyType()! as Data
-        let signature = Ed25519.sign(keyToSign, with: identityManager.identityKeyPair())! as Data
+        let keyPair = Curve25519.generateKeyPair()
+        let keyToSign = (keyPair!.publicKey()! as NSData).prependKeyType()! as Data
+        let signature = Ed25519.sign(keyToSign, with: identityManager.identityKeyPair()) as Data
 
-        let signedPK = SignedPreKeyRecord(id: Int32(0), keyPair: keyPair, signature: signature, generatedAt: Date())!
-
-        signedPrekey = signedPK
+        signedPrekey = SignedPreKeyRecord(id: Int32(0), keyPair: keyPair, signature: signature, generatedAt: Date())!
 
         for prekey in prekeys {
             storageManager.storePreKey(prekey.id, preKeyRecord: prekey)
@@ -113,4 +114,5 @@ public class UserBootstrapParameter {
 
         storageManager.storeSignedPreKey(signedPrekey.id, signedPreKeyRecord: signedPrekey)
     }
+    // swiftlint:enable force_cast
 }

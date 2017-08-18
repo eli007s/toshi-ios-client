@@ -213,9 +213,9 @@ public class ContactController: UIViewController {
         locationContentLabel.text = contact.location
 
         if let path = self.contact.avatarPath as String? {
-            AvatarManager.shared.avatar(for: path) { image, _ in
+            AvatarManager.shared.avatar(for: path) { [weak self] image, _ in
                 if image != nil {
-                    self.avatarImageView.image = image
+                    self?.avatarImageView.image = image
                 }
             }
         }

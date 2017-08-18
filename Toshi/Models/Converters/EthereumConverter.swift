@@ -96,17 +96,18 @@ struct EthereumConverter {
     ///   - attributes: the attributes of the label, to copy them on the attributed string.
     /// - Returns: the attributed string to be displayed.
     public static func balanceSparseAttributedString(forWei balance: NSDecimalNumber, exchangeRate: Decimal, width: CGFloat, attributes: [String: Any]? = nil) -> NSAttributedString {
-        let attributedString: NSMutableAttributedString = balanceAttributedString(forWei: balance, exchangeRate: exchangeRate, attributes: attributes).mutableCopy() as! NSMutableAttributedString
+        let attributedString = balanceAttributedString(forWei: balance, exchangeRate: exchangeRate, attributes: attributes)
+        guard let mutableAttributedString = attributedString.mutableCopy() as? NSMutableAttributedString else { return attributedString }
 
-        let range = NSRange(location: 0, length: attributedString.length)
+        let range = NSRange(location: 0, length: mutableAttributedString.length)
 
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .left
         let nextTabStop = NSTextTab(textAlignment: .right, location: width, options: [:])
         paragraph.tabStops = [nextTabStop]
-        attributedString.addAttribute(NSParagraphStyleAttributeName, value: paragraph, range: range)
+        mutableAttributedString.addAttribute(NSParagraphStyleAttributeName, value: paragraph, range: range)
 
-        return attributedString
+        return mutableAttributedString
     }
 
     /// Complete formatted string value for a given wei, fully left aligned.

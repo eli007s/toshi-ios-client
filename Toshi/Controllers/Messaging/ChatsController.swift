@@ -130,9 +130,11 @@ open class ChatsController: SweetTableController {
         let notifications = uiDatabaseConnection.beginLongLivedReadTransaction()
 
         // If changes do not affect current view, update and return without updating collection view
-        guard let viewConnection = self.uiDatabaseConnection.ext(TSThreadDatabaseViewExtensionName) as? YapDatabaseViewConnection else { return }
+        // swiftlint:disable force_cast
+        let threadViewConnection = uiDatabaseConnection.ext(TSThreadDatabaseViewExtensionName) as! YapDatabaseViewConnection
+        // swiftlint:enable force_cast
 
-        let hasChangesForCurrentView = viewConnection.hasChanges(for: notifications)
+        let hasChangesForCurrentView = threadViewConnection.hasChanges(for: notifications)
         if !hasChangesForCurrentView {
             uiDatabaseConnection.read { transaction in
                 self.mappings.update(with: transaction)
@@ -141,20 +143,14 @@ open class ChatsController: SweetTableController {
             return
         }
 
-        var messageRowChanges = NSArray()
-        var sectionChanges = NSArray()
+        let yapDatabaseChanges = threadViewConnection.getChangesFor(notifications: notifications, with: mappings)
+        let isDatabaseChanged = yapDatabaseChanges.rowChanges.count != 0 || yapDatabaseChanges.sectionChanges.count != 0
 
-        viewConnection.getSectionChanges(&sectionChanges, rowChanges: &messageRowChanges, for: notifications, with: mappings)
+        guard isDatabaseChanged else { return }
 
-        if sectionChanges.count == 0 && messageRowChanges.count == 0 {
-            return
-        }
-
-        let rowChanges = messageRowChanges as! [YapDatabaseViewRowChange]
-
-        if let insertedRow = rowChanges.first(where: { $0.type == .insert }) {
-            if let thread = self.thread(at: insertedRow.newIndexPath) as TSThread?, let contactIdentfier = thread.contactIdentifier() as String? {
-                IDAPIClient.shared.updateContact(with: contactIdentfier)
+        if let insertedRow = yapDatabaseChanges.rowChanges.first(where: { $0.type == .insert }) {
+            if let thread = self.thread(at: insertedRow.newIndexPath) as TSThread?, let contactIdentifier = thread.contactIdentifier() as String? {
+                IDAPIClient.shared.updateContact(with: contactIdentifier)
             }
         }
 
@@ -164,7 +160,7 @@ open class ChatsController: SweetTableController {
         if navigationController?.topViewController == self && tabBarController?.selectedViewController == navigationController {
             tableView.beginUpdates()
 
-            for rowChange in rowChanges {
+            for rowChange in yapDatabaseChanges.rowChanges {
                 switch rowChange.type {
                 case .delete:
                     tableView.deleteRows(at: [rowChange.indexPath], with: .left)

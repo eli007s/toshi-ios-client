@@ -183,8 +183,8 @@ open class ProfileController: UIViewController {
         locationContentLabel.text = TokenUser.current?.location
 
         if let path = TokenUser.current?.avatarPath as String? {
-            AvatarManager.shared.avatar(for: path) { image, _ in
-                self.avatarImageView.image = image
+            AvatarManager.shared.avatar(for: path) { [weak self] image, _ in
+                self?.avatarImageView.image = image
             }
         }
     }

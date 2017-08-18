@@ -251,9 +251,9 @@ class ChatCell: UITableViewCell {
     func updateContact(_ contact: TokenUser) {
         usernameLabel.text = !contact.name.isEmpty ? contact.name : contact.displayUsername
 
-        AvatarManager.shared.avatar(for: contact.avatarPath) { image, path in
+        AvatarManager.shared.avatar(for: contact.avatarPath) { [weak self] image, path in
             if contact.avatarPath == path {
-                self.avatarImageView.image = image
+                self?.avatarImageView.image = image
             }
         }
     }

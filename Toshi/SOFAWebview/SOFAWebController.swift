@@ -66,10 +66,6 @@ class SOFAWebController: UIViewController {
         return view
     }()
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
     fileprivate lazy var backButton: UIButton = {
         let view = UIButton(type: .custom)
         view.bounds.size = CGSize(width: 44, height: 44)
@@ -176,7 +172,7 @@ extension SOFAWebController: WKScriptMessageHandler {
 
     func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let method = Method(rawValue: message.name) else { return print("failed \(message.name)") }
-        guard let callbackId = (message.body as! NSDictionary).value(forKey: "callback") as? String else { return print("missing callback id") }
+        guard let callbackId = (message.body as? NSDictionary)?.value(forKey: "callback") as? String else { return print("missing callback id") }
 
         self.callbackId = callbackId
 

@@ -65,14 +65,6 @@ final class ChatViewModel {
         return contactsManager?.tokenContact(forAddress: thread.contactIdentifier())
     }
 
-    lazy var contactAvatarUrl: AsyncImageURL? = {
-        if let contact = self.contact, let url = URL(string: contact.avatarPath) {
-            return AsyncImageURL(url: url)
-        }
-
-        return nil
-    }()
-
     var currentButton: SofaMessage.Button?
 
     var messageModels: [MessageModel] = []
@@ -178,8 +170,10 @@ final class ChatViewModel {
         // If changes do not affect current view, update and return without updating collection view
         // TODO: Since this is used in more than one place, we should look into abstracting this away, into our own
         // table/collection view backing model.
-        let viewConnection = uiDatabaseConnection.ext(TSMessageDatabaseViewExtensionName) as? YapDatabaseViewConnection
-        if let hasChangesForCurrentView = viewConnection?.hasChanges(for: notifications) as Bool?, hasChangesForCurrentView == false {
+        // swiftlint:disable force_cast
+        let messageViewConnection = uiDatabaseConnection.ext(TSMessageDatabaseViewExtensionName) as! YapDatabaseViewConnection
+        // swiftlint:enable force_cast
+        if let hasChangesForCurrentView = messageViewConnection.hasChanges(for: notifications) as Bool?, hasChangesForCurrentView == false {
             uiDatabaseConnection.read { transaction in
                 self.mappings.update(with: transaction)
             }
@@ -187,25 +181,20 @@ final class ChatViewModel {
             return
         }
 
-        var messageRowChanges = NSArray()
-        var sectionChanges = NSArray()
-
-        viewConnection?.getSectionChanges(&sectionChanges, rowChanges: &messageRowChanges, for: notifications, with: mappings)
-
-        guard messageRowChanges.count > 0 else { return }
+        let yapDatabaseChanges = messageViewConnection.getChangesFor(notifications: notifications, with: mappings)
 
         uiDatabaseConnection.asyncRead { [weak self] transaction in
             guard let strongSelf = self else { return }
 
-            for change in messageRowChanges as! [YapDatabaseViewRowChange] {
+            for change in yapDatabaseChanges.rowChanges {
                 guard let dbExtension = transaction.ext(TSMessageDatabaseViewExtensionName) as? YapDatabaseViewTransaction else { return }
 
                 switch change.type {
                 case .insert:
-                    guard let interaction = dbExtension.object(at: change.newIndexPath, with: strongSelf.mappings) as? TSInteraction else { return }
+                    guard let signalMessage = dbExtension.object(at: change.newIndexPath, with: strongSelf.mappings) as? TSMessage else { return }
 
                     DispatchQueue.main.async {
-                        let result = strongSelf.interactor.handleInteraction(interaction, shouldProcessCommands: true)
+                        let result = strongSelf.interactor.handleSignalMessage(signalMessage, shouldProcessCommands: true)
                         strongSelf.messages.append(result)
 
                         if let sofaMessage = result.sofaWrapper as? SofaMessage {
@@ -214,22 +203,22 @@ final class ChatViewModel {
 
                         strongSelf.interactor.playSound(for: result)
 
-                        if let incoming = interaction as? TSIncomingMessage, !incoming.wasRead {
+                        if let incoming = signalMessage as? TSIncomingMessage, !incoming.wasRead {
                             incoming.markAsReadLocally()
                         }
                     }
 
                 case .update:
                     let indexPath = change.indexPath
-                    guard let interaction = dbExtension.object(at: indexPath, with: strongSelf.mappings) as? TSMessage else { return }
+                    guard let signalMessage = dbExtension.object(at: indexPath, with: strongSelf.mappings) as? TSMessage else { return }
 
                     DispatchQueue.main.async {
-                        let message = strongSelf.message(at: indexPath.row)
-                        if let signalMessage = message.signalMessage as? TSOutgoingMessage, let newSignalMessage = interaction as? TSOutgoingMessage {
-                            signalMessage.setState(newSignalMessage.messageState)
+                        let currentMessage = strongSelf.message(at: indexPath.row)
+                        if let currentOutgoingMessage = currentMessage.signalMessage as? TSOutgoingMessage, let newOutgoingMessage = signalMessage as? TSOutgoingMessage {
+                            currentOutgoingMessage.setState(newOutgoingMessage.messageState)
                         }
 
-                        let updatedMessage = strongSelf.interactor.handleInteraction(interaction, shouldProcessCommands: false)
+                        let updatedMessage = strongSelf.interactor.handleSignalMessage(signalMessage, shouldProcessCommands: false)
                         strongSelf.messages[indexPath.row] = updatedMessage
                     }
                 default:
@@ -284,14 +273,14 @@ final class ChatViewModel {
             for i in 0 ..< strongSelf.mappings.numberOfItems(inSection: 0) {
                 let indexPath = IndexPath(row: Int(i), section: 0)
                 guard let dbExtension = transaction.ext(TSMessageDatabaseViewExtensionName) as? YapDatabaseViewTransaction else { return }
-                guard let interaction = dbExtension.object(at: indexPath, with: strongSelf.mappings) as? TSInteraction else { return }
+                guard let signalMessage = dbExtension.object(at: indexPath, with: strongSelf.mappings) as? TSMessage else { return }
 
                 var shouldProcess = false
-                if let message = interaction as? TSMessage, SofaType(sofa: message.body ?? "") == .paymentRequest {
+                if SofaType(sofa: signalMessage.body ?? "") == .paymentRequest {
                     shouldProcess = true
                 }
 
-                messages.append(strongSelf.interactor.handleInteraction(interaction, shouldProcessCommands: shouldProcess))
+                messages.append(strongSelf.interactor.handleSignalMessage(signalMessage, shouldProcessCommands: shouldProcess))
             }
 
             let current = Set(messages)

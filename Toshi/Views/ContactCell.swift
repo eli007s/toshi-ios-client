@@ -28,9 +28,9 @@ class ContactCell: UITableViewCell {
                     nameLabel.text = contact.name
                 }
 
-                AvatarManager.shared.avatar(for: contact.avatarPath) { image, path in
+                AvatarManager.shared.avatar(for: contact.avatarPath) { [weak self] image, path in
                     if image != nil && contact.avatarPath == path {
-                        self.avatarImageView.image = image
+                        self?.avatarImageView.image = image
                     }
                 }
 

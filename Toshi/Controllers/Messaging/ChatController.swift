@@ -237,8 +237,10 @@ final class ChatController: OverlayController {
 
         tabBarController?.tabBar.isHidden = true
 
-        if let url = viewModel.contactAvatarUrl {
-            avatarImageView.setImage(from: url)
+        if let avatarPath = viewModel.contact?.avatarPath {
+            AvatarManager.shared.avatar(for: avatarPath, completion: { [weak self] image, _ in
+                self?.avatarImageView.image = image
+            })
         }
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: avatarImageView)
@@ -599,8 +601,10 @@ extension ChatController: UITableViewDataSource {
 
         if let cell = cell as? MessagesBasicCell {
 
-            if let url = viewModel.contactAvatarUrl, !message.isOutgoing {
-                cell.avatarImageView.setImage(from: url)
+            if !message.isOutgoing, let avatarPath = self.viewModel.contact?.avatarPath as String? {
+                AvatarManager.shared.avatar(for: avatarPath, completion: { image, _ in
+                    cell.avatarImageView.image = image
+                })
             }
 
             cell.isOutGoing = message.isOutgoing

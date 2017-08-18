@@ -173,20 +173,20 @@ final class ChatsInteractor: NSObject {
     ///   - shouldProcessCommands: If true, will process a sofa wrapper. This means replying to requests, displaying payment UI etc.
     ///
 
-    func handleInteraction(_ interaction: TSInteraction, shouldProcessCommands: Bool = false) -> Message {
-        if let interaction = interaction as? TSInvalidIdentityKeySendingErrorMessage {
+    func handleSignalMessage(_ signalMessage: TSMessage, shouldProcessCommands: Bool = false) -> Message {
+        if let invalidKeyErrorMessage = signalMessage as? TSInvalidIdentityKeySendingErrorMessage {
             DispatchQueue.main.async {
-                self.handleInvalidKeyError(interaction)
+                self.handleInvalidKeyError(invalidKeyErrorMessage)
             }
 
-            return Message(sofaWrapper: nil, signalMessage: interaction, date: interaction.dateForSorting(), isOutgoing: false)
+            return Message(sofaWrapper: nil, signalMessage: invalidKeyErrorMessage, date: invalidKeyErrorMessage.dateForSorting(), isOutgoing: false)
         }
 
-        if let message = interaction as? TSMessage, shouldProcessCommands {
-            let type = SofaType(sofa: message.body)
+        if shouldProcessCommands {
+            let type = SofaType(sofa: signalMessage.body)
             switch type {
             case .initialRequest:
-                let initialResponse = SofaInitialResponse(initialRequest: SofaInitialRequest(content: message.body ?? ""))
+                let initialResponse = SofaInitialResponse(initialRequest: SofaInitialRequest(content: signalMessage.body ?? ""))
                 sendMessage(sofaWrapper: initialResponse)
             default:
                 break
@@ -195,7 +195,7 @@ final class ChatsInteractor: NSObject {
 
         /// TODO: Simplify how we deal with interactions vs text messages.
         /// Since now we know we can expande the TSInteraction stored properties, maybe we can merge some of this together.
-        if let interaction = interaction as? TSOutgoingMessage {
+        if let interaction = signalMessage as? TSOutgoingMessage {
             let sofaWrapper = SofaWrapper.wrapper(content: interaction.body ?? "")
             let message = Message(sofaWrapper: sofaWrapper, signalMessage: interaction, date: interaction.dateForSorting(), isOutgoing: true)
 
@@ -208,7 +208,7 @@ final class ChatsInteractor: NSObject {
             }
 
             return message
-        } else if let interaction = interaction as? TSIncomingMessage {
+        } else if let interaction = signalMessage as? TSIncomingMessage {
             let sofaWrapper = SofaWrapper.wrapper(content: interaction.body ?? "")
             let message = Message(sofaWrapper: sofaWrapper, signalMessage: interaction, date: interaction.dateForSorting(), isOutgoing: false, shouldProcess: shouldProcessCommands && interaction.paymentState == .none)
 
@@ -227,7 +227,7 @@ final class ChatsInteractor: NSObject {
 
             return message
         } else {
-            return Message(sofaWrapper: nil, signalMessage: interaction as! TSMessage, date: interaction.dateForSorting(), isOutgoing: false)
+            return Message(sofaWrapper: nil, signalMessage: signalMessage, date: signalMessage.dateForSorting(), isOutgoing: false)
         }
     }
 

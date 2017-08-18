@@ -125,17 +125,17 @@ open class Message: NSObject, NOCChatItem {
         return [.message, .paymentRequest, .payment, .command].contains(sofaWrapper.type)
     }
 
-    var text: String {
-        guard let sofaWrapper = self.sofaWrapper else { return "" }
+    var text: String? {
+        guard let sofaWrapper = self.sofaWrapper else { return nil }
         switch sofaWrapper.type {
         case .message:
-            return (sofaWrapper as! SofaMessage).body
+            return (sofaWrapper as? SofaMessage)?.body
         case .paymentRequest:
-            return (sofaWrapper as! SofaPaymentRequest).body
+            return (sofaWrapper as? SofaPaymentRequest)?.body
         case .payment:
-            return ""
+            return nil
         case .command:
-            return (sofaWrapper as! SofaCommand).body
+            return (sofaWrapper as? SofaCommand)?.body
         default:
             return sofaWrapper.content
         }
