@@ -36,6 +36,13 @@ class PaymentAddressController: UIViewController {
         
         return view
     }()
+
+    internal lazy var scannerController: ScannerViewController = {
+        let controller = ScannerController(instructions: Localized("payment_qr_scanner_instructions"), types: [.qrCode])
+        controller.delegate = self
+
+        return controller
+    }()
     
     private lazy var sendBarButton = UIBarButtonItem(title: Localized("payment_send_button"), style: .plain, target: self, action: #selector(sendBarButtonTapped(_:)))
     
@@ -99,10 +106,8 @@ class PaymentAddressController: UIViewController {
 }
 
 extension PaymentAddressController: PaymentAddressInputDelegate {
-    
+
     func didRequestScanner() {
-        let scannerController = ScannerController(instructions: Localized("payment_qr_scanner_instructions"), types: [.qrCode])
-        scannerController.delegate = self
         Navigator.presentModally(scannerController)
     }
     
@@ -118,22 +123,39 @@ extension PaymentAddressController: ScannerViewControllerDelegate {
     }
     
     public func scannerViewController(_ controller: ScannerViewController, didScanResult result: String) {
-        
-        if let intent = QRCodeIntent(result: result), case .addContact(let username) = intent {
-            let name = TokenUser.name(from: username)
-            
-            IDAPIClient.shared.retrieveContact(username: name) { [weak self] contact in
-                guard let contact = contact else {
-                    controller.startScanning()
-                    
-                    return
+        if let intent = QRCodeIntent(result: result) {
+            switch intent {
+            case .addContact(let username):
+                let name = TokenUser.name(from: username)
+                fillPaymentAddress(username: name)
+            case .addressInput(let address):
+                fillPaymentAddress(address: address)
+            case .paymentRequest(_, let address, let username, _):
+                if let username = username {
+                    fillPaymentAddress(username: username)
+                } else if let address = address {
+                    fillPaymentAddress(address: address)
                 }
-                
-                self?.addressInputView.paymentAddress = contact.paymentAddress
-                
-                SoundPlayer.playSound(type: .scanned)
-                controller.dismiss(animated: true, completion: nil)
+            default:
+                scannerController.startScanning()
             }
         }
+    }
+
+    private func fillPaymentAddress(username: String) {
+        IDAPIClient.shared.retrieveContact(username: username) { [weak self] contact in
+            guard let contact = contact else {
+                self?.scannerController.startScanning()
+
+                return
+            }
+            self?.fillPaymentAddress(address: contact.paymentAddress)
+        }
+    }
+
+    private func fillPaymentAddress(address: String) {
+        self.addressInputView.paymentAddress = address
+        SoundPlayer.playSound(type: .scanned)
+        scannerController.dismiss(animated: true, completion: nil)
     }
 }
