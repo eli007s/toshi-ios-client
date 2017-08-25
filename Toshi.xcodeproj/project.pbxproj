@@ -1827,6 +1827,7 @@
 		D197BCC453900FC4954249E8 /* timestamp.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B13E8A7EAF62668B3CDC /* timestamp.json */; };
 		D197BD8E4D43B3EFF276694E /* TestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */; };
 		D197BE71058CA3432F48BF1C /* AppsAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B00DD27312EDFE1B9ECB /* AppsAPIClientTests.swift */; };
+		D197BE9857D2E5F3D421DFFE /* user?query=search%20key.json in Resources */ = {isa = PBXBuildFile; fileRef = D197BE261B5E9840C22BB4AF /* user?query=search%20key.json */; };
 		D197BEB965F76FE14EF90555 /* ActiveNetworkDisplaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BAEA583CAF9862D17B38 /* ActiveNetworkDisplaying.swift */; };
 		D197BF927251C01CE1E755E3 /* IDAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B67AA00EEB938AD5C405 /* IDAPIClientTests.swift */; };
 		D197BF9E05B8EFBFD6388667 /* ?query=Test&limit=100.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B31DBDC30111C445038A /* ?query=Test&limit=100.json */; };
@@ -2922,6 +2923,7 @@
 		D197BC29CA8C5D37D1FA122F /* TestAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAppDelegate.h; sourceTree = "<group>"; };
 		D197BC73D9FE203A5A6226C0 /* user.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = user.json; sourceTree = "<group>"; };
 		D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAppDelegate.m; sourceTree = "<group>"; };
+		D197BE261B5E9840C22BB4AF /* user?query=search%20key.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "user?query=search%20key.json"; sourceTree = "<group>"; };
 		D197BEA1C52A2DEC77F45D34 /* apps?top=true&recent=false&limit=10.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "apps?top=true&recent=false&limit=10.json"; sourceTree = "<group>"; };
 		E1A95D541E6EF092002762DA /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		E67683551F4464980014B2D4 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
@@ -4607,6 +4609,7 @@
 				D197BC73D9FE203A5A6226C0 /* user.json */,
 				D197BABF4B9016179649CE8B /* testImage.png */,
 				D197BA99A803C01D107522DC /* retrieveContact */,
+				D197B4BF1650B55CE27DD0BA /* searchContacts */,
 			);
 			path = IDAPIClient;
 			sourceTree = "<group>";
@@ -4634,6 +4637,14 @@
 				D197B31DBDC30111C445038A /* ?query=Test&limit=100.json */,
 			);
 			path = search;
+			sourceTree = "<group>";
+		};
+		D197B4BF1650B55CE27DD0BA /* searchContacts */ = {
+			isa = PBXGroup;
+			children = (
+				D197BE261B5E9840C22BB4AF /* user?query=search%20key.json */,
+			);
+			path = searchContacts;
 			sourceTree = "<group>";
 		};
 		D197B4F75C1B7D1CED4072DF /* getTopRatedApps */ = {
@@ -4838,6 +4849,7 @@
 				D197B1F0EB5B5E459DE74274 /* user.json in Resources */,
 				D197B51EB32B9BFDCDECA855 /* testImage.png in Resources */,
 				D197BBBCEDC86FA496E8D796 /* testUsername.json in Resources */,
+				D197BE9857D2E5F3D421DFFE /* user?query=search%20key.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

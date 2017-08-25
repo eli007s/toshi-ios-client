@@ -125,6 +125,18 @@ class IDAPIClientTests: QuickSpec {
                         }
                     }
                 }
+
+                it("searches contacts") {
+                    let search = "search key"
+
+                    waitUntil { done in
+                        subject.searchContacts(name: search) { users in
+                            expect(users.count).to(equal(2))
+                            expect(users.first!.name).to(equal("Search result 1"))
+                            done()
+                        }
+                    }
+                }
             }
         }
     }
