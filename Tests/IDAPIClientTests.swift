@@ -165,10 +165,12 @@ class IDAPIClientTests: QuickSpec {
                 it("reports a user") {
                     let address = "0x6f70800cb47f7f84b6c71b3693fc02595eae7378"
 
+                    let noContentMockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), statusCode: .noContent)
+                    let noContentSubject = IDAPIClient(teapot: noContentMockTeapot)
                     waitUntil { done in
-                        subject.reportUser(address: address, reason: "Not good") { success, message in  
+                        noContentSubject.reportUser(address: address, reason: "Not good") { success, message in
                             expect(success).to(beTruthy())
-                            expect(message).to(beNil())
+                            expect(message).to(equal(""))
                             done()
                         }
                     }
@@ -177,9 +179,12 @@ class IDAPIClientTests: QuickSpec {
                 it("logs in") {
                     let token = "f500a3cc32dbb78b"
 
+                    let noContentMockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), statusCode: .noContent)
+                    let noContentSubject = IDAPIClient(teapot: noContentMockTeapot)
                     waitUntil { done in
-                        subject.login(login_token: token) { success, message in
-
+                        noContentSubject.login(login_token: token) { success, message in
+                            expect(success).to(beTruthy())
+                            done()
                         }
                     }
                 }

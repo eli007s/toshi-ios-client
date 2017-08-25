@@ -1827,6 +1827,8 @@
 		D197BBBCEDC86FA496E8D796 /* testUsername.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B23E9A79854F14422CDA /* testUsername.json */; };
 		D197BC32BA4D952C0E815F18 /* ActiveNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B6E47F5F979A8C154E9A /* ActiveNetworkView.swift */; };
 		D197BCC453900FC4954249E8 /* timestamp.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B13E8A7EAF62668B3CDC /* timestamp.json */; };
+		D197BD0681F4878F8A4A2290 /* report.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B972595A9C6B2001A357 /* report.json */; };
+		D197BD3685475A3CFA19C99E /* f500a3cc32dbb78b.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B9D4C60D094621CD419B /* f500a3cc32dbb78b.json */; };
 		D197BD8E4D43B3EFF276694E /* TestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */; };
 		D197BE71058CA3432F48BF1C /* AppsAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B00DD27312EDFE1B9ECB /* AppsAPIClientTests.swift */; };
 		D197BE9857D2E5F3D421DFFE /* user?query=search%20key.json in Resources */ = {isa = PBXBuildFile; fileRef = D197BE261B5E9840C22BB4AF /* user?query=search%20key.json */; };
@@ -2919,6 +2921,8 @@
 		D197B67AA00EEB938AD5C405 /* IDAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDAPIClientTests.swift; sourceTree = "<group>"; };
 		D197B6E47F5F979A8C154E9A /* ActiveNetworkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveNetworkView.swift; sourceTree = "<group>"; };
 		D197B81BF342CD022941F8CB /* apps?top=false&recent=true&limit=10.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "apps?top=false&recent=true&limit=10.json"; sourceTree = "<group>"; };
+		D197B972595A9C6B2001A357 /* report.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = report.json; sourceTree = "<group>"; };
+		D197B9D4C60D094621CD419B /* f500a3cc32dbb78b.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = f500a3cc32dbb78b.json; sourceTree = "<group>"; };
 		D197BABF4B9016179649CE8B /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
 		D197BAEA583CAF9862D17B38 /* ActiveNetworkDisplaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveNetworkDisplaying.swift; sourceTree = "<group>"; };
 		D197BB4FC8D408B73FE253E5 /* BlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
@@ -4616,6 +4620,8 @@
 				D197B4BF1650B55CE27DD0BA /* searchContacts */,
 				D197BFBD196256E64CB9AE75 /* getTopRatedPublicUsers */,
 				D197B14AC5304462DF94200E /* getLatestPublicUsers */,
+				D197B972595A9C6B2001A357 /* report.json */,
+				D197BDBAA17727E084C56C7F /* adminLogin */,
 			);
 			path = IDAPIClient;
 			sourceTree = "<group>";
@@ -4675,6 +4681,14 @@
 				D197B23E9A79854F14422CDA /* testUsername.json */,
 			);
 			path = retrieveContact;
+			sourceTree = "<group>";
+		};
+		D197BDBAA17727E084C56C7F /* adminLogin */ = {
+			isa = PBXGroup;
+			children = (
+				D197B9D4C60D094621CD419B /* f500a3cc32dbb78b.json */,
+			);
+			path = adminLogin;
 			sourceTree = "<group>";
 		};
 		D197BFBD196256E64CB9AE75 /* getTopRatedPublicUsers */ = {
@@ -4874,6 +4888,8 @@
 				D197BE9857D2E5F3D421DFFE /* user?query=search%20key.json in Resources */,
 				D197B7A6A79927ACB3D202A5 /* user?public=true&top=true&recent=false&limit=10.json in Resources */,
 				D197B624B89773FEF06A7330 /* user?public=true&top=false&recent=true&limit=10.json in Resources */,
+				D197BD0681F4878F8A4A2290 /* report.json in Resources */,
+				D197BD3685475A3CFA19C99E /* f500a3cc32dbb78b.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
