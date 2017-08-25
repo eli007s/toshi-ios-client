@@ -114,6 +114,17 @@ class IDAPIClientTests: QuickSpec {
                         }
                     }
                 }
+
+                it("finds a contact") {
+                    let username = "testUsername"
+
+                    waitUntil { done in
+                        subject.findContact(name: username) { user in
+                            expect(user).toNot(beNil())
+                            done()
+                        }
+                    }
+                }
             }
         }
     }
