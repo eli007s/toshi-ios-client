@@ -69,6 +69,29 @@ class IDAPIClientTests: QuickSpec {
                         }
                     }
                 }
+                
+                it("updates the user") {
+                    let userDict: [String: Any] = [
+                        "token_id": "van Diemenstraat 328",
+                        "payment_address": "Longstreet 200",
+                        "username": "marijn2000",
+                        "about": "test user dict!",
+                        "location": "Leiden",
+                        "name": "Marijntje",
+                        "avatar": "someURL",
+                        "is_app": false,
+                        "public": true,
+                        "verified": false
+                    ]
+
+                    waitUntil { done in
+                        subject.updateUser(userDict) { success, message in
+                            expect(success).to(beTruthy())
+                            expect(message).to(beNil())
+                            done()
+                        }
+                    }
+                }
             }
         }
     }
