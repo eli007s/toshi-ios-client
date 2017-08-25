@@ -330,27 +330,6 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
     }
 
     public func findContact(name: String, completion: @escaping ((TokenUser?) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.teapot.get("/v1/user/\(name)") { (result: NetworkResult) in
-                var contact: TokenUser?
-
-                switch result {
-                case .success(let json, _):
-                    guard let json = json?.dictionary else {
-                        completion(nil)
-                        return
-                    }
-
-                    contact = TokenUser(json: json)
-                    NotificationCenter.default.post(name: IDAPIClient.didFetchContactInfoNotification, object: contact)
-                case .failure(_, _, let error):
-                    print(error.localizedDescription)
-                }
-
-                completion(contact)
-            }
-        }
-
         contactCache.setObject(forKey: name, cacheBlock: { success, failure in
 
             DispatchQueue.global(qos: .userInitiated).async {
