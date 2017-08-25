@@ -59,6 +59,16 @@ class IDAPIClientTests: QuickSpec {
 //                        }
 //                    }
 //                }
+
+                it("updates Avatar") {
+                    let testImage = UIImage(named: "testImage.png", in: Bundle(for: IDAPIClientTests.self), compatibleWith: nil)
+                    waitUntil { done in
+                        subject.updateAvatar(testImage!) { success in
+                            expect(success).to(beTruthy())
+                            done()
+                        }
+                    }
+                }
             }
         }
     }

@@ -1813,6 +1813,7 @@
 		D197B23BE442460C9D5622BE /* apps?top=false&recent=true&limit=10.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B81BF342CD022941F8CB /* apps?top=false&recent=true&limit=10.json */; };
 		D197B341D7AC04907550BFA3 /* TestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */; };
 		D197B401E977724E946A55BE /* ActiveNetworkDisplaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BAEA583CAF9862D17B38 /* ActiveNetworkDisplaying.swift */; };
+		D197B51EB32B9BFDCDECA855 /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D197BABF4B9016179649CE8B /* testImage.png */; };
 		D197B5E0F04D0A7529EC6342 /* TestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */; };
 		D197B61F77E710DF67E4FBD2 /* UINotificationName+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B669EF87D9D6642E12BA /* UINotificationName+Additions.swift */; };
 		D197B6A1519FAB078F9174F4 /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BB4FC8D408B73FE253E5 /* BlurView.swift */; };
@@ -2913,6 +2914,7 @@
 		D197B67AA00EEB938AD5C405 /* IDAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDAPIClientTests.swift; sourceTree = "<group>"; };
 		D197B6E47F5F979A8C154E9A /* ActiveNetworkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveNetworkView.swift; sourceTree = "<group>"; };
 		D197B81BF342CD022941F8CB /* apps?top=false&recent=true&limit=10.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "apps?top=false&recent=true&limit=10.json"; sourceTree = "<group>"; };
+		D197BABF4B9016179649CE8B /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
 		D197BAEA583CAF9862D17B38 /* ActiveNetworkDisplaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveNetworkDisplaying.swift; sourceTree = "<group>"; };
 		D197BB4FC8D408B73FE253E5 /* BlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
 		D197BC29CA8C5D37D1FA122F /* TestAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAppDelegate.h; sourceTree = "<group>"; };
@@ -4601,6 +4603,7 @@
 			children = (
 				D197B13E8A7EAF62668B3CDC /* timestamp.json */,
 				D197BC73D9FE203A5A6226C0 /* user.json */,
+				D197BABF4B9016179649CE8B /* testImage.png */,
 			);
 			path = IDAPIClient;
 			sourceTree = "<group>";
@@ -4822,6 +4825,7 @@
 				D197BF9E05B8EFBFD6388667 /* ?query=Test&limit=100.json in Resources */,
 				D197BCC453900FC4954249E8 /* timestamp.json in Resources */,
 				D197B1F0EB5B5E459DE74274 /* user.json in Resources */,
+				D197B51EB32B9BFDCDECA855 /* testImage.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
