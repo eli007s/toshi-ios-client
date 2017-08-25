@@ -1822,6 +1822,7 @@
 		D197B83F0A9396CF2E7628D5 /* ActiveNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B6E47F5F979A8C154E9A /* ActiveNetworkView.swift */; };
 		D197B968EE5E2CE52CC92F1D /* YapDatabaseViewConnection+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B494213B9F6EC5413D88 /* YapDatabaseViewConnection+Additions.swift */; };
 		D197B9D646686EF7FE2D78B8 /* UINotificationName+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B669EF87D9D6642E12BA /* UINotificationName+Additions.swift */; };
+		D197BBBCEDC86FA496E8D796 /* testUsername.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B23E9A79854F14422CDA /* testUsername.json */; };
 		D197BC32BA4D952C0E815F18 /* ActiveNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B6E47F5F979A8C154E9A /* ActiveNetworkView.swift */; };
 		D197BCC453900FC4954249E8 /* timestamp.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B13E8A7EAF62668B3CDC /* timestamp.json */; };
 		D197BD8E4D43B3EFF276694E /* TestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */; };
@@ -2908,6 +2909,7 @@
 		CFAFE0DF986DC3B38AF50EE6 /* Pods-CocoaPods-Distribution.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoaPods-Distribution.release.xcconfig"; path = "Pods/Target Support Files/Pods-CocoaPods-Distribution/Pods-CocoaPods-Distribution.release.xcconfig"; sourceTree = "<group>"; };
 		D197B00DD27312EDFE1B9ECB /* AppsAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppsAPIClientTests.swift; sourceTree = "<group>"; };
 		D197B13E8A7EAF62668B3CDC /* timestamp.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = timestamp.json; sourceTree = "<group>"; };
+		D197B23E9A79854F14422CDA /* testUsername.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = testUsername.json; sourceTree = "<group>"; };
 		D197B31DBDC30111C445038A /* ?query=Test&limit=100.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "?query=Test&limit=100.json"; sourceTree = "<group>"; };
 		D197B494213B9F6EC5413D88 /* YapDatabaseViewConnection+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "YapDatabaseViewConnection+Additions.swift"; sourceTree = "<group>"; };
 		D197B669EF87D9D6642E12BA /* UINotificationName+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINotificationName+Additions.swift"; sourceTree = "<group>"; };
@@ -4604,6 +4606,7 @@
 				D197B13E8A7EAF62668B3CDC /* timestamp.json */,
 				D197BC73D9FE203A5A6226C0 /* user.json */,
 				D197BABF4B9016179649CE8B /* testImage.png */,
+				D197BA99A803C01D107522DC /* retrieveContact */,
 			);
 			path = IDAPIClient;
 			sourceTree = "<group>";
@@ -4639,6 +4642,14 @@
 				D197BEA1C52A2DEC77F45D34 /* apps?top=true&recent=false&limit=10.json */,
 			);
 			path = getTopRatedApps;
+			sourceTree = "<group>";
+		};
+		D197BA99A803C01D107522DC /* retrieveContact */ = {
+			isa = PBXGroup;
+			children = (
+				D197B23E9A79854F14422CDA /* testUsername.json */,
+			);
+			path = retrieveContact;
 			sourceTree = "<group>";
 		};
 		E1A95D581E6F031F002762DA /* Views */ = {
@@ -4826,6 +4837,7 @@
 				D197BCC453900FC4954249E8 /* timestamp.json in Resources */,
 				D197B1F0EB5B5E459DE74274 /* user.json in Resources */,
 				D197B51EB32B9BFDCDECA855 /* testImage.png in Resources */,
+				D197BBBCEDC86FA496E8D796 /* testUsername.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

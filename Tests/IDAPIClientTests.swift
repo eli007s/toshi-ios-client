@@ -92,6 +92,28 @@ class IDAPIClientTests: QuickSpec {
                         }
                     }
                 }
+
+                it("retrieve contact") {
+                    let username = "testUsername"
+
+                    waitUntil { done in
+                        subject.retrieveContact(username: username) { user in
+                            expect(user).toNot(beNil())
+                            done()
+                        }
+                    }
+                }
+
+                it("retrieve user") {
+                    let username = "testUsername"
+
+                    waitUntil { done in
+                        subject.retrieveUser(username: username) { user in
+                            expect(user).toNot(beNil())
+                            done()
+                        }
+                    }
+                }
             }
         }
     }
