@@ -1816,8 +1816,10 @@
 		D197B51EB32B9BFDCDECA855 /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D197BABF4B9016179649CE8B /* testImage.png */; };
 		D197B5E0F04D0A7529EC6342 /* TestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */; };
 		D197B61F77E710DF67E4FBD2 /* UINotificationName+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B669EF87D9D6642E12BA /* UINotificationName+Additions.swift */; };
+		D197B624B89773FEF06A7330 /* user?public=true&top=false&recent=true&limit=10.json in Resources */ = {isa = PBXBuildFile; fileRef = D197BDEA89BCB77125249C7F /* user?public=true&top=false&recent=true&limit=10.json */; };
 		D197B6A1519FAB078F9174F4 /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BB4FC8D408B73FE253E5 /* BlurView.swift */; };
 		D197B6D91E419A23890C7E8B /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BB4FC8D408B73FE253E5 /* BlurView.swift */; };
+		D197B7A6A79927ACB3D202A5 /* user?public=true&top=true&recent=false&limit=10.json in Resources */ = {isa = PBXBuildFile; fileRef = D197BF7D34A013033A920705 /* user?public=true&top=true&recent=false&limit=10.json */; };
 		D197B80A67FA2271BE1C9621 /* YapDatabaseViewConnection+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B494213B9F6EC5413D88 /* YapDatabaseViewConnection+Additions.swift */; };
 		D197B83F0A9396CF2E7628D5 /* ActiveNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B6E47F5F979A8C154E9A /* ActiveNetworkView.swift */; };
 		D197B968EE5E2CE52CC92F1D /* YapDatabaseViewConnection+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B494213B9F6EC5413D88 /* YapDatabaseViewConnection+Additions.swift */; };
@@ -2923,8 +2925,10 @@
 		D197BC29CA8C5D37D1FA122F /* TestAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAppDelegate.h; sourceTree = "<group>"; };
 		D197BC73D9FE203A5A6226C0 /* user.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = user.json; sourceTree = "<group>"; };
 		D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAppDelegate.m; sourceTree = "<group>"; };
+		D197BDEA89BCB77125249C7F /* user?public=true&top=false&recent=true&limit=10.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "user?public=true&top=false&recent=true&limit=10.json"; sourceTree = "<group>"; };
 		D197BE261B5E9840C22BB4AF /* user?query=search%20key.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "user?query=search%20key.json"; sourceTree = "<group>"; };
 		D197BEA1C52A2DEC77F45D34 /* apps?top=true&recent=false&limit=10.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "apps?top=true&recent=false&limit=10.json"; sourceTree = "<group>"; };
+		D197BF7D34A013033A920705 /* user?public=true&top=true&recent=false&limit=10.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "user?public=true&top=true&recent=false&limit=10.json"; sourceTree = "<group>"; };
 		E1A95D541E6EF092002762DA /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		E67683551F4464980014B2D4 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		E67683581F44673E0014B2D4 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
@@ -4610,8 +4614,18 @@
 				D197BABF4B9016179649CE8B /* testImage.png */,
 				D197BA99A803C01D107522DC /* retrieveContact */,
 				D197B4BF1650B55CE27DD0BA /* searchContacts */,
+				D197BFBD196256E64CB9AE75 /* getTopRatedPublicUsers */,
+				D197B14AC5304462DF94200E /* getLatestPublicUsers */,
 			);
 			path = IDAPIClient;
+			sourceTree = "<group>";
+		};
+		D197B14AC5304462DF94200E /* getLatestPublicUsers */ = {
+			isa = PBXGroup;
+			children = (
+				D197BDEA89BCB77125249C7F /* user?public=true&top=false&recent=true&limit=10.json */,
+			);
+			path = getLatestPublicUsers;
 			sourceTree = "<group>";
 		};
 		D197B18BC61D2FA9F500E49F /* Mocks */ = {
@@ -4661,6 +4675,14 @@
 				D197B23E9A79854F14422CDA /* testUsername.json */,
 			);
 			path = retrieveContact;
+			sourceTree = "<group>";
+		};
+		D197BFBD196256E64CB9AE75 /* getTopRatedPublicUsers */ = {
+			isa = PBXGroup;
+			children = (
+				D197BF7D34A013033A920705 /* user?public=true&top=true&recent=false&limit=10.json */,
+			);
+			path = getTopRatedPublicUsers;
 			sourceTree = "<group>";
 		};
 		E1A95D581E6F031F002762DA /* Views */ = {
@@ -4850,6 +4872,8 @@
 				D197B51EB32B9BFDCDECA855 /* testImage.png in Resources */,
 				D197BBBCEDC86FA496E8D796 /* testUsername.json in Resources */,
 				D197BE9857D2E5F3D421DFFE /* user?query=search%20key.json in Resources */,
+				D197B7A6A79927ACB3D202A5 /* user?public=true&top=true&recent=false&limit=10.json in Resources */,
+				D197B624B89773FEF06A7330 /* user?public=true&top=false&recent=true&limit=10.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

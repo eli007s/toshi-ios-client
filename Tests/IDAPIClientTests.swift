@@ -137,6 +137,31 @@ class IDAPIClientTests: QuickSpec {
                         }
                     }
                 }
+
+                it("gets top rated public users") {
+                    let search = "search key"
+
+                    waitUntil { done in
+                        subject.getTopRatedPublicUsers { users, error in
+                            expect(users!.count ?? 0).to(equal(2))
+                            expect(users!.first!.about).to(equal("Top rated"))
+                            done()
+                        }
+                    }
+                }
+
+                it("gets top latest public users") {
+                    let search = "search key"
+
+                    waitUntil { done in
+                        subject.getLatestPublicUsers { users, error in
+                            print(error)
+                            expect(users!.count ?? 0).to(equal(2))
+                            expect(users!.first!.about ).to(equal("Latest public"))
+                            done()
+                        }
+                    }
+                }
             }
         }
     }
