@@ -155,10 +155,31 @@ class IDAPIClientTests: QuickSpec {
 
                     waitUntil { done in
                         subject.getLatestPublicUsers { users, error in
-                            print(error)
                             expect(users!.count ?? 0).to(equal(2))
                             expect(users!.first!.about ).to(equal("Latest public"))
                             done()
+                        }
+                    }
+                }
+
+                it("reports a user") {
+                    let address = "0x6f70800cb47f7f84b6c71b3693fc02595eae7378"
+
+                    waitUntil { done in
+                        subject.reportUser(address: address, reason: "Not good") { success, message in  
+                            expect(success).to(beTruthy())
+                            expect(message).to(beNil())
+                            done()
+                        }
+                    }
+                }
+
+                it("logs in") {
+                    let token = "f500a3cc32dbb78b"
+
+                    waitUntil { done in
+                        subject.login(login_token: token) { success, message in
+
                         }
                     }
                 }
