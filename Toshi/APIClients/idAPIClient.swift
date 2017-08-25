@@ -45,6 +45,11 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
 
     public var baseURL: URL
 
+    convenience init(teapot: Teapot) {
+        self.init()
+        self.teapot = teapot
+    }
+
     private override init() {
         baseURL = URL(string: TokenIdServiceBaseURLPath)!
         teapot = Teapot(baseURL: baseURL)
