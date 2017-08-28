@@ -576,8 +576,14 @@ final class ChatController: OverlayController {
 extension ChatController: UITableViewDelegate {
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-
-        if viewModel.messageModels[indexPath.row].type == .image {
+        
+        let message = viewModel.messageModels[indexPath.item]
+        
+        if let signalMessage = message.signalMessage as? TSOutgoingMessage, case .unsent = signalMessage.messageState {
+            
+            print("Try to resend this message!")
+            
+        } else if message.type == .image {
 
             let controller = ImagesViewController(messages: viewModel.messageModels, initialIndexPath: indexPath)
             controller.transitioningDelegate = self
@@ -606,7 +612,7 @@ extension ChatController: UITableViewDataSource {
 
         let message = viewModel.messageModels[indexPath.item]
         let cell = tableView.dequeueReusableCell(withIdentifier: message.reuseIdentifier, for: indexPath)
-
+        
         if let cell = cell as? MessagesBasicCell {
 
             if !message.isOutgoing, let avatarPath = self.viewModel.contact?.avatarPath as String? {
@@ -617,6 +623,15 @@ extension ChatController: UITableViewDataSource {
 
             cell.isOutGoing = message.isOutgoing
             cell.positionType = positionType(for: indexPath)
+            
+            if let signalMessage = message.signalMessage as? TSOutgoingMessage {
+                switch signalMessage.messageState {
+                case .attemptingOut, .sent_OBSOLETE, .delivered_OBSOLETE, .sentToService:
+                    cell.sentState = .sent
+                case .unsent:
+                    cell.sentState = .failed
+                }
+            }
         }
 
         if let cell = cell as? MessagesImageCell, message.type == .image {
