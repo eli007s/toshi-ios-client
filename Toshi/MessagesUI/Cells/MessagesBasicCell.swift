@@ -9,6 +9,13 @@ enum MessagePositionType {
     case bottom
 }
 
+enum OutGoingMessageSentState {
+    case undefined
+    case sent
+    case sending
+    case failed
+}
+
 /* Messages Basic Cell:
  This UITableViewCell is the base cell for the different
  advanced cells used in messages. It provides the ground layout. */
@@ -37,6 +44,13 @@ class MessagesBasicCell: UITableViewCell {
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.layer.cornerRadius = 18
+
+        return view
+    }()
+
+    private(set) lazy var errorView: MessagesErrorView = {
+        let view = MessagesErrorView()
+        view.alpha = 0
 
         return view
     }()
@@ -76,6 +90,17 @@ class MessagesBasicCell: UITableViewCell {
             avatarImageView.isHidden = isAvatarHidden
 
             messagesCornerView.setImage(for: positionType, isOutGoing: isOutGoing, isPayment: self is MessagesPaymentCell)
+        }
+    }
+
+    var sentState: OutGoingMessageSentState = .undefined {
+        didSet {
+            switch sentState {
+            case .undefined, .sent, .sending:
+                showSentError(false, animated: false)
+            case .failed:
+                showSentError(true, animated: false)
+            }
         }
     }
 
@@ -146,6 +171,35 @@ class MessagesBasicCell: UITableViewCell {
 
         bubbleView.addSubview(messagesCornerView)
         messagesCornerView.edges(to: bubbleView)
+
+        /* Error View:
+         A red view that can animate in from the right to indicate
+         that a message has failed to sent.
+         */
+
+        contentView.addSubview(errorView)
+        errorView.edges(to: rightLayoutGuide)
+    }
+
+    func showSentError(_ show: Bool, animated: Bool) {
+
+        rightWidthConstraint?.constant = show ? 30 : 0
+
+        if animated {
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .easeOutFromCurrentStateWithUserInteraction, animations: {
+                self.errorView.alpha = show ? 1 : 0
+
+                if self.superview != nil {
+                    self.layoutIfNeeded()
+                }
+            }, completion: nil)
+        } else {
+            errorView.alpha = show ? 1 : 0
+
+            if superview != nil {
+                layoutIfNeeded()
+            }
+        }
     }
 
     override func prepareForReuse() {
@@ -153,5 +207,6 @@ class MessagesBasicCell: UITableViewCell {
 
         avatarImageView.image = nil
         messagesCornerView.image = nil
+        sentState = .undefined
     }
 }
