@@ -466,7 +466,8 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
                         }
 
                         completion?(true, "")
-                    case .failure(let json, _, _):
+                    case .failure(let json, _, let error):
+                        print(error)
                         let errors = json?.dictionary?["errors"] as? [[String: Any]]
                         let message = errors?.first?["message"] as? String
 
@@ -489,7 +490,8 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
             DispatchQueue.global(qos: .userInitiated).async {
                 self.teapot.get(path, headerFields: fields) { result in
                     switch result {
-                    case .success(_, let response):
+                    case .success(let json, let response):
+                        print(json)
                         guard response.statusCode == 204 else {
                             print("Invalid response - Login")
                             completion?(false, "Something went wrong")
@@ -497,7 +499,8 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
                         }
 
                         completion?(true, "")
-                    case .failure(let json, _, _):
+                    case .failure(let json, _, let error):
+                        print(error)
                         let errors = json?.dictionary?["errors"] as? [[String: Any]]
                         let message = errors?.first?["message"] as? String
 

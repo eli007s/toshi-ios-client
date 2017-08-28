@@ -22,20 +22,24 @@ import Teapot
 //swiftlint:disable force_cast
 class IDAPIClientTests: QuickSpec {
 
+
     override func spec() {
         describe("the id API Client") {
 
-            context("Happy path 😎") {
+            context("Ok status") {
                 var subject: IDAPIClient!
-                let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self))
-                subject = IDAPIClient(teapot: mockTeapot)
+
+                beforeEach {
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self))
+                    subject = IDAPIClient(teapot: mockTeapot)
+                }
 
                 it("fetches the timestamp") {
                     waitUntil { done in
                         subject.fetchTimestamp { timestamp in
                             expect(timestamp).toNot(beNil())
                             done()
-                         }
+                        }
                     }
                 }
 
@@ -44,7 +48,7 @@ class IDAPIClientTests: QuickSpec {
                         subject.registerUserIfNeeded { status, message in
                             expect(status).to(equal(UserRegisterStatus.registered))
                             done()
-                         }
+                        }
                     }
                 }
 
@@ -69,7 +73,7 @@ class IDAPIClientTests: QuickSpec {
                         }
                     }
                 }
-                
+
                 it("updates the user") {
                     let userDict: [String: Any] = [
                         "token_id": "van Diemenstraat 328",
@@ -156,19 +160,26 @@ class IDAPIClientTests: QuickSpec {
                     waitUntil { done in
                         subject.getLatestPublicUsers { users, error in
                             expect(users!.count ?? 0).to(equal(2))
-                            expect(users!.first!.about ).to(equal("Latest public"))
+                            expect(users!.first!.about).to(equal("Latest public"))
                             done()
                         }
                     }
+                }
+            }
+
+            context("No content status") {
+                var subject: IDAPIClient!
+
+                beforeEach {
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), statusCode: .noContent)
+                    subject = IDAPIClient(teapot: mockTeapot)
                 }
 
                 it("reports a user") {
                     let address = "0x6f70800cb47f7f84b6c71b3693fc02595eae7378"
 
-                    let noContentMockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), statusCode: .noContent)
-                    let noContentSubject = IDAPIClient(teapot: noContentMockTeapot)
                     waitUntil { done in
-                        noContentSubject.reportUser(address: address, reason: "Not good") { success, message in
+                        subject.reportUser(address: address, reason: "Not good") { success, message in
                             expect(success).to(beTruthy())
                             expect(message).to(equal(""))
                             done()
@@ -179,10 +190,8 @@ class IDAPIClientTests: QuickSpec {
                 it("logs in") {
                     let token = "f500a3cc32dbb78b"
 
-                    let noContentMockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), statusCode: .noContent)
-                    let noContentSubject = IDAPIClient(teapot: noContentMockTeapot)
                     waitUntil { done in
-                        noContentSubject.login(login_token: token) { success, message in
+                        subject.login(login_token: token) { success, message in
                             expect(success).to(beTruthy())
                             done()
                         }
@@ -192,4 +201,5 @@ class IDAPIClientTests: QuickSpec {
         }
     }
 }
+
 //swiftlint:enable force_cast
