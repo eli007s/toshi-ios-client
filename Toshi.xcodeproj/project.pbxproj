@@ -1131,6 +1131,7 @@
 		A91629141F3C6614008A7F36 /* PaymentAddressController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A916290C1F3B5828008A7F36 /* PaymentAddressController.swift */; };
 		A91629161F3C7CFD008A7F36 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91629151F3C7CFD008A7F36 /* Payment.swift */; };
 		A91629171F3C85D6008A7F36 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91629151F3C7CFD008A7F36 /* Payment.swift */; };
+		A9180FB11F5452A000DC668E /* MessagesErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9180FB01F5452A000DC668E /* MessagesErrorView.swift */; };
 		A9181D221EDD8154005B63F6 /* RoundIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9181D211EDD8154005B63F6 /* RoundIconButton.swift */; };
 		A9191DC91F2203DD00498A4F /* AdvancedSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9191DC51F2203DD00498A4F /* AdvancedSettings.storyboard */; };
 		A9191DCA1F2203DD00498A4F /* AdvancedSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9191DC61F2203DD00498A4F /* AdvancedSettingsController.swift */; };
@@ -2854,6 +2855,7 @@
 		A916290E1F3C3A02008A7F36 /* PaymentAddressInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentAddressInputView.swift; sourceTree = "<group>"; };
 		A91629101F3C64FE008A7F36 /* PaymentNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentNavigationController.swift; path = Toshi/Controllers/PaymentNavigationController.swift; sourceTree = SOURCE_ROOT; };
 		A91629151F3C7CFD008A7F36 /* Payment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
+		A9180FB01F5452A000DC668E /* MessagesErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesErrorView.swift; sourceTree = "<group>"; };
 		A9181D211EDD8154005B63F6 /* RoundIconButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundIconButton.swift; sourceTree = "<group>"; };
 		A9191DC51F2203DD00498A4F /* AdvancedSettings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AdvancedSettings.storyboard; sourceTree = "<group>"; };
 		A9191DC61F2203DD00498A4F /* AdvancedSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedSettingsController.swift; sourceTree = "<group>"; };
@@ -4553,6 +4555,7 @@
 				A9E1DCD81F1E1A72001A4ABE /* IconLabelButton.swift */,
 				A9E1DCD91F1E1A72001A4ABE /* IconLabelView.swift */,
 				A963D52F1F288E5D00297FDF /* MessagesCornerView.swift */,
+				A9180FB01F5452A000DC668E /* MessagesErrorView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6207,6 +6210,7 @@
 				A90E5A291F03CE0400DAA501 /* BrowseAppCell.swift in Sources */,
 				2BE66A0C1EF910B6007A7130 /* Editable.swift in Sources */,
 				9F4D80E21EEA8B4500FB5361 /* MediaPickerPhotoStripView.m in Sources */,
+				A9180FB11F5452A000DC668E /* MessagesErrorView.swift in Sources */,
 				A9ED6CD01E83CD8400160637 /* Footnote.swift in Sources */,
 				9F4D7EE41EEA8B4500FB5361 /* TGMediaAvatarEditorTransition.m in Sources */,
 				9F4D801E1EEA8B4500FB5361 /* TransitionLayout.m in Sources */,
