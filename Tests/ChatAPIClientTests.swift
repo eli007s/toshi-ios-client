@@ -27,14 +27,30 @@ class ChatAPIClientTests: QuickSpec {
             var subject: ChatAPIClient!
 
             context("Happy path 😎") {
-                let mockTeapot = MockTeapot(bundle: Bundle(for: ChatAPIClientTests.self), mockFileName: "timestamp")
-                subject = ChatAPIClient(teapot: mockTeapot)
 
                 it("fetches timestamp") {
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: ChatAPIClientTests.self), mockFileName: "timestamp")
+                    subject = ChatAPIClient(teapot: mockTeapot)
+
                     waitUntil { done in
                         subject.fetchTimestamp { timestamp, error in
 
                             expect(timestamp).toNot(beNil())
+                            done()
+                        }
+                    }
+                }
+
+                it("fetches timestamp") {
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: ChatAPIClientTests.self), mockFileName: "", statusCode: .noContent)
+                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    subject = ChatAPIClient(teapot: mockTeapot)
+
+                    waitUntil { done in
+                        subject.registerUser { success, message in
+                            print(message)
+                            expect(success).to(beTruthy())
+                            expect(message).to(beNil())
                             done()
                         }
                     }
