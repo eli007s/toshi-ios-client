@@ -1806,6 +1806,7 @@
 		A9F8D1C81E72B4AA003F5749 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F8D1C71E72B4AA003F5749 /* Checkbox.swift */; };
 		ADA43FF3BB04BEDF54DF5CCC /* libPods-CocoaPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24AC0CEAA51D7F8A19F246E9 /* libPods-CocoaPods-Tests.a */; };
 		C1128E2CDD482DB9BE1BF5A3 /* libPods-CocoaPods-Distribution.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E67E3F2BFB7B0171BF61B30 /* libPods-CocoaPods-Distribution.a */; };
+		D197B0C862DB34DC24FD938C /* UserBootstrapParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FC72A331E250E2D00EF1141 /* UserBootstrapParameters.swift */; };
 		D197B11DD70DB5696FFC4FD2 /* UINotificationName+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B669EF87D9D6642E12BA /* UINotificationName+Additions.swift */; };
 		D197B12668721515F3F87A31 /* search.json in Resources */ = {isa = PBXBuildFile; fileRef = D197BF349118AC9D1FE859C4 /* search.json */; };
 		D197B1E784F2176023D0F635 /* YapDatabaseViewConnection+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B494213B9F6EC5413D88 /* YapDatabaseViewConnection+Additions.swift */; };
@@ -1814,8 +1815,10 @@
 		D197B341D7AC04907550BFA3 /* TestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */; };
 		D197B35BF9744D2F37972747 /* EthereumAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B33D03FC3E507BE3B3C1 /* EthereumAPIClientTests.swift */; };
 		D197B401E977724E946A55BE /* ActiveNetworkDisplaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BAEA583CAF9862D17B38 /* ActiveNetworkDisplaying.swift */; };
+		D197B51C885865D5BAA3DA40 /* ChatAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BF89E400CB886FCBE240 /* ChatAPIClientTests.swift */; };
 		D197B5E0F04D0A7529EC6342 /* TestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */; };
 		D197B61F77E710DF67E4FBD2 /* UINotificationName+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B669EF87D9D6642E12BA /* UINotificationName+Additions.swift */; };
+		D197B63BA9594507FEB1D917 /* ChatAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FC72A3C1E251ACC00EF1141 /* ChatAPIClient.swift */; };
 		D197B6A1519FAB078F9174F4 /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BB4FC8D408B73FE253E5 /* BlurView.swift */; };
 		D197B6CAA22DFAA0B0FFE15D /* sendSignedTransaction.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B654F730E653B7C6F444 /* sendSignedTransaction.json */; };
 		D197B6D91E419A23890C7E8B /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BB4FC8D408B73FE253E5 /* BlurView.swift */; };
@@ -2923,6 +2926,7 @@
 		D197BC29CA8C5D37D1FA122F /* TestAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAppDelegate.h; sourceTree = "<group>"; };
 		D197BD2C5E7FC428D7ADB559 /* TestAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAppDelegate.m; sourceTree = "<group>"; };
 		D197BF349118AC9D1FE859C4 /* search.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = search.json; sourceTree = "<group>"; };
+		D197BF89E400CB886FCBE240 /* ChatAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatAPIClientTests.swift; sourceTree = "<group>"; };
 		E1A95D541E6EF092002762DA /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		E67683551F4464980014B2D4 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		E67683581F44673E0014B2D4 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
@@ -3116,6 +3120,7 @@
 				84C459011F41B7AA00D534B8 /* QRCodeIntentTests.swift */,
 				D197B00DD27312EDFE1B9ECB /* AppsAPIClientTests.swift */,
 				D197B33D03FC3E507BE3B3C1 /* EthereumAPIClientTests.swift */,
+				D197BF89E400CB886FCBE240 /* ChatAPIClientTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -5311,6 +5316,9 @@
 				D197BD8E4D43B3EFF276694E /* TestAppDelegate.m in Sources */,
 				D197BE71058CA3432F48BF1C /* AppsAPIClientTests.swift in Sources */,
 				D197B35BF9744D2F37972747 /* EthereumAPIClientTests.swift in Sources */,
+				D197B51C885865D5BAA3DA40 /* ChatAPIClientTests.swift in Sources */,
+				D197B63BA9594507FEB1D917 /* ChatAPIClient.swift in Sources */,
+				D197B0C862DB34DC24FD938C /* UserBootstrapParameters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -25,6 +25,11 @@ public class ChatAPIClient: NSObject {
 
     public var baseURL: URL
 
+    convenience init(teapot: Teapot) {
+        self.init()
+        self.teapot = teapot
+    }
+
     private override init() {
         guard let tokenChatServiceBaseURL = Bundle.main.object(forInfoDictionaryKey: "TokenChatServiceBaseURL") as? String, let url = URL(string: tokenChatServiceBaseURL) else { fatalError("TokenChatServiceBaseURL should be provided")}
 
@@ -34,7 +39,7 @@ public class ChatAPIClient: NSObject {
         super.init()
     }
 
-    func fetchTimestamp(_ completion: @escaping ((Int) -> Void)) {
+    func fetchTimestamp(_ completion: @escaping ((_ timestamp: Int?, _ error: Error?) -> Void)) {
         DispatchQueue.global(qos: .userInitiated).async {
 
             self.teapot.get("/v1/accounts/bootstrap/") { (result: NetworkResult) in
@@ -44,18 +49,24 @@ public class ChatAPIClient: NSObject {
                     guard let json = json?.dictionary else { fatalError("JSON dictionary not found in payload") }
                     guard let timestamp = json["timestamp"] as? Int else { fatalError("Timestamp not found in json payload or not an integer.") }
 
-                    completion(timestamp)
+                    completion(timestamp, nil)
                 case .failure(let json, let response, let error):
                     print(error)
                     print(response)
                     print(json ?? "")
+                    completion(nil, error)
                 }
             }
         }
     }
 
     public func registerUser(completion: ((_ success: Bool, _ message: String?) -> Void)? = nil) {
-        fetchTimestamp { timestamp in
+        fetchTimestamp { timestamp, error in
+            guard let timestamp = timestamp else {
+                completion?(false, "Error fetching timestamp \(error)")
+                return
+            }
+
             let cereal = Cereal.shared
             let parameters = UserBootstrapParameter()
             let path = "/v1/accounts/bootstrap"
