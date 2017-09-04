@@ -28,7 +28,7 @@ class IDAPIClientTests: QuickSpec {
                 var subject: IDAPIClient!
 
                 it("fetches the timestamp") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "timestamp")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -40,9 +40,9 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("registers user if needed") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user")
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
-                    mockTeapot.overrideEndPoint(Cereal.shared.address, withFileName: "nonExistingUser")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user")
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
+                    mockTeapot.overrideEndPoint(Cereal.shared.address, withFilename: "nonExistingUser")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -54,8 +54,8 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("updates Avatar") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user")
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user")
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let testImage = UIImage(named: "testImage.png", in: Bundle(for: IDAPIClientTests.self), compatibleWith: nil)
@@ -68,8 +68,8 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("updates the user") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user")
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user")
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let userDict: [String: Any] = [
@@ -95,7 +95,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("retrieve user") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let username = "testUsername"
@@ -109,7 +109,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("finds a contact") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user")
                     subject = IDAPIClient(teapot: mockTeapot)
                     
                     let username = "testUsername"
@@ -123,7 +123,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("searches contacts") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "searchContacts")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "searchContacts")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let search = "search key"
@@ -138,7 +138,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("gets top rated public users") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "getTopRatedPublicUsers")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "getTopRatedPublicUsers")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -152,7 +152,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("gets latest public users") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "getLatestPublicUsers")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "getLatestPublicUsers")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -166,8 +166,8 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("reports a user") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "", statusCode: .noContent)
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "", statusCode: .noContent)
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let address = "0x6f70800cb47f7f84b6c71b3693fc02595eae7378"
@@ -182,8 +182,8 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("logs in") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "", statusCode: .noContent)
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "", statusCode: .noContent)
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let token = "f500a3cc32dbb78b"
@@ -201,7 +201,7 @@ class IDAPIClientTests: QuickSpec {
                 var subject: IDAPIClient!
 
                 it("fetches the timestamp") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "timestamp", statusCode: .unauthorized)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "timestamp", statusCode: .unauthorized)
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -214,9 +214,9 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("registers user if needed") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user", statusCode: .unauthorized)
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
-                    mockTeapot.overrideEndPoint(Cereal.shared.address, withFileName: "nonExistingUser")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user", statusCode: .unauthorized)
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
+                    mockTeapot.overrideEndPoint(Cereal.shared.address, withFilename: "nonExistingUser")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -228,8 +228,8 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("updates Avatar") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user", statusCode: .unauthorized)
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user", statusCode: .unauthorized)
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let testImage = UIImage(named: "testImage.png", in: Bundle(for: IDAPIClientTests.self), compatibleWith: nil)
@@ -242,8 +242,8 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("updates the user") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user", statusCode: .unauthorized)
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user", statusCode: .unauthorized)
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let userDict: [String: Any] = [
@@ -269,7 +269,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("retrieve user") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user", statusCode: .unauthorized)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user", statusCode: .unauthorized)
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let username = "testUsername"
@@ -283,7 +283,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("finds a contact") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "user", statusCode: .unauthorized)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "user", statusCode: .unauthorized)
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let username = "somethingCompletelyDifferent"
@@ -297,7 +297,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("searches contacts") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "searchContacts", statusCode: .unauthorized)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "searchContacts", statusCode: .unauthorized)
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let search = "search key"
@@ -311,7 +311,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("gets top rated public users") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "getTopRatedPublicUsers", statusCode: .unauthorized)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "getTopRatedPublicUsers", statusCode: .unauthorized)
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -324,7 +324,7 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("gets latest public users") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "getLatestPublicUsers", statusCode: .unauthorized)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "getLatestPublicUsers", statusCode: .unauthorized)
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -337,8 +337,8 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("reports a user") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "", statusCode: .unauthorized)
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "", statusCode: .unauthorized)
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let address = "0x6f70800cb47f7f84b6c71b3693fc02595eae7378"
@@ -353,8 +353,8 @@ class IDAPIClientTests: QuickSpec {
                 }
 
                 it("logs in") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFileName: "", statusCode: .unauthorized)
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: IDAPIClientTests.self), mockFilename: "", statusCode: .unauthorized)
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = IDAPIClient(teapot: mockTeapot)
 
                     let token = "f500a3cc32dbb78b"

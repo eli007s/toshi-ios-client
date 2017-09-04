@@ -59,55 +59,56 @@ public final class ExchangeRateAPIClient {
                 Yap.sharedInstance.insert(object: rate, for: ExchangeRateAPIClient.collectionKey)
             }
 
-            completion(rate)
+            DispatchQueue.main.async {
+                completion(rate)
+            }
         }
     }
 
     public func getRate(_ completion: @escaping ((_ rate: Decimal?) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let code = TokenUser.current?.localCurrency ?? TokenUser.defaultCurrency
+        let code = TokenUser.current?.localCurrency ?? TokenUser.defaultCurrency
 
-            self.teapot.get("/v1/rates/ETH/\(code)") { (result: NetworkResult) in
-                switch result {
-                case .success(let json, _):
-                    guard let json = json?.dictionary, let usd = json["rate"] as? String, let doubleValue = Double(usd) as Double? else {
-                        completion(nil)
-                        return
-                    }
-
-                    completion(Decimal(doubleValue))
-                case .failure(_, let response, let error):
-                    print(response)
-                    print(error.localizedDescription)
+        self.teapot.get("/v1/rates/ETH/\(code)") { (result: NetworkResult) in
+            switch result {
+            case .success(let json, _):
+                guard let json = json?.dictionary, let usd = json["rate"] as? String, let doubleValue = Double(usd) as Double? else {
                     completion(nil)
+                    return
                 }
+
+                completion(Decimal(doubleValue))
+            case .failure(_, _, let error):
+                print(error.localizedDescription)
+                completion(nil)
             }
         }
     }
 
     public func getCurrencies(_ completion: @escaping (([Currency]) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.teapot.get("/v1/currencies") { (result: NetworkResult) in
-                switch result {
-                case .success(let json, _):
-                    guard let json = json?.dictionary, let currencies = json["currencies"] as? [[String : String]] else {
-                        completion([])
-                        return
-                    }
+        self.teapot.get("/v1/currencies") { (result: NetworkResult) in
+            var results: [Currency] = []
 
-                    var results: [Currency] = []
-                    for currency in currencies {
-                        guard let code = currency["code"], let name = currency["name"] else { continue }
-
-                        results.append(Currency(code, name))
-                    }
-
-                    completion(results)
-                case .failure(_, let response, let error):
-                    print(response)
-                    print(error.localizedDescription)
+            switch result {
+            case .success(let json, _):
+                guard let json = json?.dictionary, let currencies = json["currencies"] as? [[String : String]] else {
                     completion([])
+                    return
                 }
+
+                var validResults: [Currency] = []
+                for currency in currencies {
+                    guard let code = currency["code"], let name = currency["name"] else { continue }
+
+                    validResults.append(Currency(code, name))
+                }
+
+                results = validResults
+            case .failure(_, _, let error):
+                print(error.localizedDescription)
+            }
+
+            DispatchQueue.main.async {
+                completion(results)
             }
         }
     }

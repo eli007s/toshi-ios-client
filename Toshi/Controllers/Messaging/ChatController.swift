@@ -571,6 +571,33 @@ final class ChatController: OverlayController {
 
         showMediaPickerBlock(nil)
     }
+    
+    fileprivate func approvePaymentForIndexPath(_ indexPath: IndexPath) {
+        guard let message = self.viewModel.messageModels.element(at: indexPath.row) as MessageModel? else { return }
+        
+        adjustToPaymentState(.pendingConfirmation, at: indexPath)
+        
+        guard let paymentRequest = message.sofaWrapper as? SofaPaymentRequest else { return }
+        
+        showActivityIndicator()
+        
+        viewModel.interactor.sendPayment(in: paymentRequest.value) { [weak self] (success: Bool) in
+            let state: TSInteraction.PaymentState = success ? .approved : .failed
+            self?.adjustToPaymentState(state, at: indexPath)
+            DispatchQueue.main.asyncAfter(seconds: 2.0) {
+                self?.hideActiveNetworkViewIfNeeded()
+            }
+        }
+    }
+    
+    fileprivate func declinePaymentForIndexPath(_ indexPath: IndexPath) {
+        adjustToPaymentState(.rejected, at: indexPath)
+        
+        DispatchQueue.main.asyncAfter(seconds: 2.0) {
+            self.hideActiveNetworkViewIfNeeded()
+        }
+    }
+    
 }
 
 extension ChatController: UITableViewDelegate {
@@ -719,30 +746,32 @@ extension ChatController: MessagesPaymentCellDelegate {
     func approvePayment(for cell: MessagesPaymentCell) {
         guard let indexPath = self.tableView.indexPath(for: cell) as IndexPath? else { return }
         guard let message = self.viewModel.messageModels.element(at: indexPath.row) as MessageModel? else { return }
-
-        adjustToPaymentState(.pendingConfirmation, at: indexPath)
-
-        guard let paymentRequest = message.sofaWrapper as? SofaPaymentRequest else { return }
-
-        showActivityIndicator()
-
-        viewModel.interactor.sendPayment(in: paymentRequest.value) { [weak self] (success: Bool) in
-            let state: TSInteraction.PaymentState = success ? .approved : .failed
-            self?.adjustToPaymentState(state, at: indexPath)
-            DispatchQueue.main.asyncAfter(seconds: 2.0) {
-                self?.hideActiveNetworkViewIfNeeded()
-            }
+        
+        let messageText: String
+        if let fiat = message.fiatValueString, let eth = message.ethereumValueString {
+            messageText = String(format: Localized("payment_request_confirmation_warning_message"), fiat, eth, thread.name())
+        } else {
+            messageText = String(format: Localized("payment_request_confirmation_warning_message_fallback"), thread.name())
         }
+        
+        let alert = UIAlertController(title: Localized("payment_request_confirmation_warning_title"), message: messageText, preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: Localized("payment_request_confirmation_warning_action_cancel"), style: .default, handler: { _ in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        
+        alert.addAction(UIAlertAction(title: Localized("payment_request_confirmation_warning_action_confirm"), style: .default, handler: { _ in
+            alert.dismiss(animated: true, completion: nil)
+            self.approvePaymentForIndexPath(indexPath)
+        }))
+        
+        Navigator.presentModally(alert)
     }
 
     func declinePayment(for cell: MessagesPaymentCell) {
         guard let indexPath = self.tableView.indexPath(for: cell) as IndexPath? else { return }
 
-        adjustToPaymentState(.rejected, at: indexPath)
-
-        DispatchQueue.main.asyncAfter(seconds: 2.0) {
-            self.hideActiveNetworkViewIfNeeded()
-        }
+        declinePaymentForIndexPath(indexPath)
     }
 }
 

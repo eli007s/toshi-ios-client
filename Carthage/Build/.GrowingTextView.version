@@ -1,18 +1,9 @@
 {
+  "commitish" : "9f2b44246bba060f7e3ca1e10c2d59dd6d3fbae5",
   "iOS" : [
     {
-      "hash" : "91f7d2cee73624323ca165253ed39729d4c6eed1ed88976659fa5195a57259d1",
+      "hash" : "4516bd0fed70306a78d0e1c54a07a91bf50994898f1a122536ba4b9006c1c98d",
       "name" : "HPGrowingTextView"
     }
-  ],
-  "commitish" : "9f2b44246bba060f7e3ca1e10c2d59dd6d3fbae5",
-  "watchOS" : [
-
-  ],
-  "tvOS" : [
-
-  ],
-  "Mac" : [
-
   ]
 }

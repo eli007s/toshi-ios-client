@@ -1,18 +1,9 @@
 {
+  "commitish" : "6010896237977829294b394cc616951eeb8a36bd",
   "iOS" : [
     {
-      "hash" : "97aaf7dfa8f36fe111eade05b230a9237d5dda00b4dbe9c44d5ee3dec624af69",
+      "hash" : "8b4a5b1be2aadfcddd58e0c67242d528c91f594351360d5ec4dab2b5dce7f865",
       "name" : "NoChat"
     }
-  ],
-  "commitish" : "6010896237977829294b394cc616951eeb8a36bd",
-  "watchOS" : [
-
-  ],
-  "tvOS" : [
-
-  ],
-  "Mac" : [
-
   ]
 }

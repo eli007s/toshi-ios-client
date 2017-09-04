@@ -251,6 +251,8 @@ final class ChatsInteractor: NSObject {
             if recipient == nil {
                 recipient = SignalRecipient(textSecureIdentifier: address, relay: nil)
                 shouldRequestContactsRefresh = true
+
+                IDAPIClient.shared.updateContact(with: address)
             }
 
             recipient?.save(with: transaction)

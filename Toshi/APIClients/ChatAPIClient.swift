@@ -35,26 +35,26 @@ public class ChatAPIClient: NSObject {
     }
 
     func fetchTimestamp(_ completion: @escaping ((Int) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
 
-            self.teapot.get("/v1/accounts/bootstrap/") { (result: NetworkResult) in
-                switch result {
-                case .success(let json, let response):
-                    guard response.statusCode == 200 else { fatalError("Could not retrieve timestamp from chat service.") }
-                    guard let json = json?.dictionary else { fatalError("JSON dictionary not found in payload") }
-                    guard let timestamp = json["timestamp"] as? Int else { fatalError("Timestamp not found in json payload or not an integer.") }
+        self.teapot.get("/v1/accounts/bootstrap/") { (result: NetworkResult) in
+            switch result {
+            case .success(let json, let response):
+                guard response.statusCode == 200 else { fatalError("Could not retrieve timestamp from chat service.") }
+                guard let json = json?.dictionary else { fatalError("JSON dictionary not found in payload") }
+                guard let timestamp = json["timestamp"] as? Int else { fatalError("Timestamp not found in json payload or not an integer.") }
 
+                DispatchQueue.main.async {
                     completion(timestamp)
-                case .failure(let json, let response, let error):
-                    print(error)
-                    print(response)
-                    print(json ?? "")
                 }
+            case .failure(let json, let response, let error):
+                print(error)
+                print(response)
+                print(json ?? "")
             }
         }
     }
 
-    public func registerUser(completion: ((_ success: Bool, _ message: String?) -> Void)? = nil) {
+    public func registerUser(completion: @escaping ((_ success: Bool, _ message: String?) -> Void) = { (Bool, String) in }) {
         fetchTimestamp { timestamp in
             let cereal = Cereal.shared
             let parameters = UserBootstrapParameter()
@@ -62,7 +62,7 @@ public class ChatAPIClient: NSObject {
             let payload = parameters.payload
 
             guard let data = try? JSONSerialization.data(withJSONObject: payload, options: []), let payloadString = String(data: data, encoding: .utf8) else {
-                completion?(false, "Invalid payload, request could not be executed")
+                completion(false, "Invalid payload, request could not be executed")
                 return
             }
             
@@ -74,22 +74,27 @@ public class ChatAPIClient: NSObject {
             let requestParameter = RequestParameter(payload)
 
             self.teapot.put(path, parameters: requestParameter, headerFields: fields) { result in
+                var succeeded = false
+                var errorMessage: String?
+
                 switch result {
                 case .success(_, let response):
                     guard response.statusCode == 204 else {
                         print("Could not register user. Status code \(response.statusCode)")
-                        completion?(false, "Could not register user. Status code \(response.statusCode)")
+                        completion(false, "Could not register user. Status code \(response.statusCode)")
                         return
                     }
 
                     TSStorageManager.storeServerToken(parameters.password, signalingKey: parameters.signalingKey)
                     print("Successfully registered chat user with address: \(cereal.address)")
-                    completion?(true, nil)
-                case .failure(let json, let response, let error):
-                    print(json ?? "")
-                    print(response)
+                    succeeded = true
+                case .failure(_, let response, let error):
                     print(error)
-                    completion?(false, "response: \(response), error: \(error)")
+                    errorMessage = "response: \(response), error: \(error)"
+                }
+
+                DispatchQueue.main.async {
+                    completion(succeeded, errorMessage)
                 }
             }
         }

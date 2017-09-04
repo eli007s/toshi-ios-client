@@ -176,7 +176,13 @@ extension PassphraseVerifyController: VerificationDelegate {
 
         if originalPhrase == phrase.map { word in word.text } {
             DispatchQueue.main.asyncAfter(seconds: 0.5) {
-                _ = self.navigationController?.popToRootViewController(animated: true)
+                guard let rootViewController = self.navigationController?.viewControllers.first else { return }
+                
+                if rootViewController is SettingsController {
+                    _ = self.navigationController?.popToRootViewController(animated: true)
+                } else {
+                    self.dismiss(animated: true, completion: nil)
+                }
             }
 
             return .correct

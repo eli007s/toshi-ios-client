@@ -68,16 +68,18 @@
 
 - (void)refreshContact:(TokenUser *)contact
 {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"address == %@", contact.address];
-    TokenUser *existingContact = [[self.tokenContacts filteredArrayUsingPredicate:predicate] firstObject];
+    NSUInteger existingContactIndex = [self.tokenContacts indexOfObjectPassingTest:^BOOL(TokenUser * _Nonnull object, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [object.address isEqualToString:contact.address];
+    }];
 
-    NSUInteger index = [self.tokenContacts indexOfObject:existingContact];
-    if (index != NSNotFound) {
-        NSMutableArray *mutableContacts = self.tokenContacts.mutableCopy;
-        [mutableContacts replaceObjectAtIndex:index withObject:contact];
-
-        self.tokenContacts = mutableContacts.copy;
+    NSMutableArray *mutableContacts = self.tokenContacts.mutableCopy;
+    if (existingContactIndex != NSNotFound) {
+        [mutableContacts replaceObjectAtIndex:existingContactIndex withObject:contact];
+    } else {
+        [mutableContacts addObject:contact];
     }
+
+    self.tokenContacts = mutableContacts.copy;
 }
 
 - (void)databaseChanged:(NSNotification *)notification
@@ -118,9 +120,8 @@
         for (NSData *contactData in contactsData) {
             NSDictionary<NSString *, id> *json = [NSJSONSerialization JSONObjectWithData:contactData options:0 error:0];
 
-            if (json[@"address"] != [[Cereal shared] address]) {
+            if (![json[@"token_id"] isEqualToString:[[Cereal shared] address]]) {
                 TokenUser *tokenContact = [[TokenUser alloc] initWithJson:json shouldSave:NO];
-
                 [contacts addObject:tokenContact];
             }
         }

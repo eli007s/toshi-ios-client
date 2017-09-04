@@ -41,6 +41,12 @@
 "payment_message_success_message" = "Your Payment was successful.";
 "payment_message_button" = "Ok";
 
+"payment_request_confirmation_warning_title" = "Confirm payment";
+"payment_request_confirmation_warning_message" = "Do you want to accept the %@ (%@) request from %@?";
+"payment_request_confirmation_warning_message_fallback" = "Do you want accept the payment request from %@?";
+"payment_request_confirmation_warning_action_cancel" = "Cancel";
+"payment_request_confirmation_warning_action_confirm" = "Pay";
+
 /* Passphrase */
 "passphrase_copy_navigation_title" = "Store passphrase";
 "passphrase_copy_title" = "This is your passphrase";
@@ -93,6 +99,11 @@
 "settings_signout_action_cancel" = "Cancel";
 "settings_signout_action_delete" = "Delete";
 "settings_signout_action_signout" = "Sign out";
+
+"settings_deposit_error_title" = "Your account is at Risk";
+"settings_deposit_error_message" = "You haven’t backed up your passphrase yet. Without it you risk losing money.";
+"settings_deposit_error_action_cancel" = "Cancel";
+"settings_deposit_error_action_backup" = "Backup";
 
 /* Currency Picker */
 "currency_picker_title" = "Local Currency";

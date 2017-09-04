@@ -31,6 +31,10 @@ class AddMoneyController: UIViewController {
     }()
 
     private lazy var stackView: UIStackView = UIStackView(with: self.items)
+    
+    private var isAccountSecured: Bool {
+        return TokenUser.current?.verified ?? false
+    }
 
     convenience init(for username: String, name _: String) {
         self.init(nibName: nil, bundle: nil)
@@ -60,6 +64,23 @@ class AddMoneyController: UIViewController {
         scrollView.addSubview(stackView)
         stackView.edges(to: scrollView)
         stackView.width(to: scrollView)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if !isAccountSecured {
+            let alert = UIAlertController(title: Localized("settings_deposit_error_title"), message: Localized("settings_deposit_error_message"), preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: Localized("settings_deposit_error_action_cancel"), style: .default, handler: { _ in
+                alert.dismiss(animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: Localized("settings_deposit_error_action_backup"), style: .default, handler: { _ in
+                let passphraseEnableController = PassphraseEnableController()
+                let navigationController = UINavigationController(rootViewController: passphraseEnableController)
+                Navigator.presentModally(navigationController)
+            }))
+            Navigator.presentModally(alert)
+        }
     }
 
     func copyToClipBoard(_ button: ConfirmationButton) {

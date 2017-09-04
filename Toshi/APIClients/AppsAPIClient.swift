@@ -33,47 +33,54 @@ public class AppsAPIClient: NSObject, CacheExpiryDefault {
     }
 
     func getTopRatedApps(limit: Int = 10, completion: @escaping (_ apps: [TokenUser]?, _ error: Error?) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.teapot.get("/v1/search/apps?top=true&recent=false&limit=\(limit)") { (result: NetworkResult) in
-                switch result {
-
-                case .success(let json, _):
-                    guard let json = json?.dictionary, let appsJSON = json["results"] as? [[String: Any]] else {
-                        completion(nil, nil)
-                        return
-                    }
-
-                    let apps = appsJSON.map { json -> TokenUser in
-                        TokenUser(json: json)
-                    }
-
-                    completion(apps, nil)
-                case .failure(_, _, let error):
-                    completion([TokenUser](), error)
+        self.teapot.get("/v1/search/apps?top=true&recent=false&limit=\(limit)") { (result: NetworkResult) in
+            var resultsError: Error?
+            var results: [TokenUser] = []
+            switch result {
+            case .success(let json, _):
+                guard let json = json?.dictionary, let appsJSON = json["results"] as? [[String: Any]] else {
+                    completion(nil, nil)
+                    return
                 }
+
+                let apps = appsJSON.map { json -> TokenUser in
+                    TokenUser(json: json)
+                }
+
+                results = apps
+            case .failure(_, _, let error):
+                resultsError = error
+            }
+
+            DispatchQueue.main.async {
+                completion(results, resultsError)
             }
         }
     }
 
     func getFeaturedApps(limit: Int = 10, completion: @escaping (_ apps: [TokenUser]?, _ error: Error?) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.teapot.get("/v1/search/apps?top=false&recent=true&limit=\(limit)") { (result: NetworkResult) in
-                switch result {
+        self.teapot.get("/v1/search/apps?top=false&recent=true&limit=\(limit)") { (result: NetworkResult) in
+            var resultsError: Error?
+            var results: [TokenUser] = []
 
-                case .success(let json, _):
-                    guard let json = json?.dictionary, let appsJSON = json["results"] as? [[String: Any]] else {
-                        completion(nil, nil)
-                        return
-                    }
-
-                    let apps = appsJSON.map { json in
-                        TokenUser(json: json)
-                    }
-
-                    completion(apps, nil)
-                case .failure(_, _, let error):
-                    completion([TokenUser](), error)
+            switch result {
+            case .success(let json, _):
+                guard let json = json?.dictionary, let appsJSON = json["results"] as? [[String: Any]] else {
+                    completion(nil, nil)
+                    return
                 }
+
+                let apps = appsJSON.map { json in
+                    TokenUser(json: json)
+                }
+
+                results = apps
+            case .failure(_, _, let error):
+                resultsError = error
+            }
+
+            DispatchQueue.main.async {
+                completion(results, resultsError)
             }
         }
     }
@@ -84,34 +91,35 @@ public class AppsAPIClient: NSObject, CacheExpiryDefault {
             return
         }
 
-        DispatchQueue.global(qos: .userInitiated).async {
-            let query = searchTerm.addingPercentEncoding(withAllowedCharacters: IDAPIClient.allowedSearchTermCharacters) ?? searchTerm
-            self.teapot.get("/v1/search/apps/?query=\(query)&limit=\(limit)") { (result: NetworkResult) in
-                switch result {
-                case .success(let json, _):
-                    guard let json = json?.dictionary else {
-                        completion([], nil)
+        let query = searchTerm.addingPercentEncoding(withAllowedCharacters: IDAPIClient.allowedSearchTermCharacters) ?? searchTerm
+        self.teapot.get("/v1/search/apps/?query=\(query)&limit=\(limit)") { (result: NetworkResult) in
+            var resultsError: Error?
+            var results: [TokenUser] = []
 
-                        return
-                    }
+            switch result {
+            case .success(let json, _):
+                guard let json = json?.dictionary else {
+                    completion([], nil)
 
-                    guard let appsJSON = json["results"] as? [[String: Any]] else {
-                        completion([TokenUser](), nil)
-                        return
-                    }
-
-                    let apps = appsJSON.map { json -> TokenUser in
-                        return TokenUser(json: json)
-                    }
-
-                    completion(apps, nil)
-                case .failure(_, let response, let error):
-                    if response.statusCode == 404 {
-                        completion([TokenUser](), nil)
-                    } else {
-                        completion([TokenUser](), error)
-                    }
+                    return
                 }
+
+                guard let appsJSON = json["results"] as? [[String: Any]] else {
+                    completion([TokenUser](), nil)
+                    return
+                }
+
+                let apps = appsJSON.map { json -> TokenUser in
+                    return TokenUser(json: json)
+                }
+
+                results = apps
+            case .failure(_, _, let error):
+                resultsError = error
+            }
+
+            DispatchQueue.main.async {
+                completion(results, resultsError)
             }
         }
     }

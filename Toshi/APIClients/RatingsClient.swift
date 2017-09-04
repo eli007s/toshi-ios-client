@@ -90,26 +90,23 @@ class RatingsClient: NSObject {
         super.init()
     }
 
-    private func fetchTimestamp(_ completion: @escaping ((_ ratingScore: Int) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.teapot.get("/v1/timestamp") { (result: NetworkResult) in
-                switch result {
-                case .success(let json, _):
-                    guard let json = json?.dictionary, let timestamp = json["timestamp"] as? Int else {
-                        print("Invalid response - Fetch timestamp")
-                        return
-                    }
-
-                    completion(timestamp)
-
-                case .failure(_, let response, _):
-                    print(response)
+    private func fetchTimestamp(_ completion: @escaping ((_ timestamp: Int) -> Void)) {
+        self.teapot.get("/v1/timestamp") { (result: NetworkResult) in
+            switch result {
+            case .success(let json, _):
+                guard let json = json?.dictionary, let timestamp = json["timestamp"] as? Int else {
+                    print("Invalid response - Fetch timestamp")
+                    return
                 }
+
+                completion(timestamp)
+            case .failure(_, _, _):
+                completion(0)
             }
         }
     }
 
-    public func submit(userId: String, rating: Int, review: String, completion: (() -> Void)? = nil) {
+    public func submit(userId: String, rating: Int, review: String, completion: @escaping (() -> Void) = { _ in }) {
         fetchTimestamp { timestamp in
             let cereal = Cereal.shared
             let path = "/v1/review/submit"
@@ -124,25 +121,25 @@ class RatingsClient: NSObject {
                 alert.addAction(UIAlertAction(title: "OK", style: .default))
 
                 Navigator.presentModally(alert)
-                completion?()
+                completion()
                 return
             }
-            
+
             let hashedPayload = cereal.sha3WithID(string: payloadString)
             let signature = "0x\(cereal.signWithID(message: "POST\n\(path)\n\(timestamp)\n\(hashedPayload)"))"
 
             let fields: [String: String] = ["Token-ID-Address": cereal.address, "Token-Signature": signature, "Token-Timestamp": String(describing: timestamp)]
             let json = RequestParameter(payload)
 
-            DispatchQueue.global(qos: .userInitiated).async {
-                self.teapot.post(path, parameters: json, headerFields: fields) { result in
+            self.teapot.post(path, parameters: json, headerFields: fields) { result in
+                DispatchQueue.main.async {
                     switch result {
                     case .success:
                         let alert = UIAlertController(title: "Success", message: "User succesfully reviewed.", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "OK", style: .default))
 
                         Navigator.presentModally(alert)
-                        completion?()
+                        completion()
                     case .failure(let json, _, _):
                         var errorMessage = Localized("request_generic_error")
                         if let json = json?.dictionary, let errors = json["errors"] as? [Any], let error = errors.first as? [String: Any], let message = error["message"] as? String {
@@ -153,7 +150,7 @@ class RatingsClient: NSObject {
                         alert.addAction(UIAlertAction(title: "OK", style: .default))
 
                         Navigator.presentModally(alert)
-                        completion?()
+                        completion()
                     }
                 }
             }
@@ -161,18 +158,22 @@ class RatingsClient: NSObject {
     }
 
     public func scores(for userId: String, completion: @escaping ((_ ratingScore: RatingScore) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.teapot.get("/v1/user/\(userId)") { result in
-                switch result {
-                case .success(let json, _):
-                    guard let json = json?.dictionary else { return }
-                    guard let ratingScore = RatingScore(json: json) else { return }
 
+        self.teapot.get("/v1/user/\(userId)") { result in
+            switch result {
+            case .success(let json, _):
+                guard let json = json?.dictionary else { return }
+                guard let ratingScore = RatingScore(json: json) else { return }
+
+                DispatchQueue.main.async {
                     completion(ratingScore)
-                case .failure:
+                }
+            case .failure:
+                DispatchQueue.main.async {
                     completion(RatingScore.zero)
                 }
             }
         }
+        
     }
 }

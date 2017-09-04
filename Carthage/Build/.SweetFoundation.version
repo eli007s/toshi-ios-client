@@ -1,21 +1,9 @@
 {
+  "commitish" : "1.2.1",
   "iOS" : [
     {
-      "hash" : "701045a88a22a6f8567b218ae01159770ac7270459003e81d1147058a0ddbdb4",
+      "hash" : "91651ed86a1e21d8ed6f93e05c245acc269973605abe708bb258dba8a1090736",
       "name" : "SweetFoundation"
-    }
-  ],
-  "commitish" : "1.2.1",
-  "watchOS" : [
-
-  ],
-  "tvOS" : [
-
-  ],
-  "Mac" : [
-    {
-      "hash" : "b8742ef1924ae853b569499c9b7cdce129dfd2d1878ed210b506e7ea43c41731",
-      "name" : "SweetFoundationMac"
     }
   ]
 }

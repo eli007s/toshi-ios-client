@@ -44,7 +44,6 @@ final class AvatarManager: NSObject, CacheExpiryDefault {
             downloadAvatar(path: path) { image in
                 completion(image, path)
             }
-
             return
         }
 
@@ -73,6 +72,7 @@ final class AvatarManager: NSObject, CacheExpiryDefault {
             let avatarPaths = contactsManager.tokenContacts.flatMap { contact in
                 contact.avatarPath as String
             }
+
             if let currentUserAvatarPath = TokenUser.current?.avatarPath as String? {
                 self?.downloadAvatar(for: currentUserAvatarPath)
             }
@@ -114,28 +114,30 @@ final class AvatarManager: NSObject, CacheExpiryDefault {
     }
 
     func downloadAvatar(path: String, completion: @escaping (_ image: UIImage?) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            guard let url = URL(string: path) as URL?,
-                let teapot = self.teapot(for: url) as Teapot? else {
-                    completion(nil)
-                    return
+        guard let url = URL(string: path) as URL?,
+            let teapot = self.teapot(for: url) as Teapot? else {
+                completion(nil)
+                return
+        }
+
+        teapot.get(url.relativePath) { [weak self] (result: NetworkImageResult) in
+            guard let strongSelf = self else {
+                completion(nil)
+                return
             }
 
-            teapot.get(url.relativePath) { [weak self] (result: NetworkImageResult) in
-                guard let strongSelf = self else {
-                    completion(nil)
-                    return
-                }
+            var resultImage: UIImage?
+            switch result {
+            case .success(let image, _):
+                strongSelf.imageCache.setObject(image, forKey: path, expires: strongSelf.cacheExpiry)
+                resultImage = image
+            case .failure(let response, let error):
+                print(response)
+                print(error)
+            }
 
-                switch result {
-                case .success(let image, _):
-                    strongSelf.imageCache.setObject(image, forKey: path, expires: strongSelf.cacheExpiry)
-                    completion(image)
-                case .failure(let response, let error):
-                    print(response)
-                    print(error)
-                    completion(nil)
-                }
+            DispatchQueue.main.async {
+                completion(resultImage)
             }
         }
     }

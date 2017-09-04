@@ -28,7 +28,7 @@ class ExchangeRateAPIClientTests: QuickSpec {
 
             context("Happy path 😎") {
                 it("gets the exchange rate") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: ExchangeRateAPIClientTests.self), mockFileName: "getRate")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: ExchangeRateAPIClientTests.self), mockFilename: "getRate")
                     subject = ExchangeRateAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -40,7 +40,7 @@ class ExchangeRateAPIClientTests: QuickSpec {
                 }
 
                 it("gets the currencies") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: ExchangeRateAPIClientTests.self), mockFileName: "getCurrencies")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: ExchangeRateAPIClientTests.self), mockFilename: "getCurrencies")
                     subject = ExchangeRateAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -54,7 +54,7 @@ class ExchangeRateAPIClientTests: QuickSpec {
 
             context("Not found") {
                 it("gets the exchange rate") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: ExchangeRateAPIClientTests.self), mockFileName: "getRate", statusCode: .notFound)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: ExchangeRateAPIClientTests.self), mockFilename: "getRate", statusCode: .notFound)
                     subject = ExchangeRateAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in
@@ -66,7 +66,7 @@ class ExchangeRateAPIClientTests: QuickSpec {
                 }
 
                 it("gets the currencies") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: ExchangeRateAPIClientTests.self), mockFileName: "getCurrencies", statusCode: .notFound)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: ExchangeRateAPIClientTests.self), mockFilename: "getCurrencies", statusCode: .notFound)
                     subject = ExchangeRateAPIClient(teapot: mockTeapot)
 
                     waitUntil { done in

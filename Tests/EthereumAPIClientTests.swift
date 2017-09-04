@@ -28,7 +28,7 @@ class EthereumAPIClientTests: QuickSpec {
 
             context("Happy path 😎") {
                 it("creates an unsigned transaction") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFileName: "createUnsignedTransaction")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFilename: "createUnsignedTransaction")
                     subject = EthereumAPIClient(mockTeapot: mockTeapot)
 
                     let parameters: [String: Any] = [
@@ -47,8 +47,8 @@ class EthereumAPIClientTests: QuickSpec {
                 }
 
                 it("sends a signed transaction") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFileName: "sendSignedTransaction")
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFilename: "sendSignedTransaction")
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = EthereumAPIClient(mockTeapot: mockTeapot)
 
                     waitUntil(timeout: 3) { done in
@@ -63,7 +63,7 @@ class EthereumAPIClientTests: QuickSpec {
                 }
 
                 it("gets the balance") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFileName: "getBalance")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFilename: "getBalance")
                     subject = EthereumAPIClient(mockTeapot: mockTeapot)
 
                     waitUntil { done in
@@ -77,7 +77,7 @@ class EthereumAPIClientTests: QuickSpec {
 
             context("⚠ Unauthorized error 🔒") {
                 it("creates an unsigned transaction") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFileName: "createUnsignedTransaction", statusCode: .unauthorized)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFilename: "createUnsignedTransaction", statusCode: .unauthorized)
                     subject = EthereumAPIClient(mockTeapot: mockTeapot)
 
                     let parameters: [String: Any] = [
@@ -96,8 +96,8 @@ class EthereumAPIClientTests: QuickSpec {
                 }
 
                 it("sends a signed transaction") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFileName: "sendSignedTransaction", statusCode: .unauthorized)
-                    mockTeapot.overrideEndPoint("timestamp", withFileName: "timestamp")
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFilename: "sendSignedTransaction", statusCode: .unauthorized)
+                    mockTeapot.overrideEndPoint("timestamp", withFilename: "timestamp")
                     subject = EthereumAPIClient(mockTeapot: mockTeapot)
 
                     waitUntil(timeout: 3) { done in
@@ -112,7 +112,7 @@ class EthereumAPIClientTests: QuickSpec {
                 }
 
                 it("gets the balance") {
-                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFileName: "getBalance", statusCode: .unauthorized)
+                    let mockTeapot = MockTeapot(bundle: Bundle(for: EthereumAPIClientTests.self), mockFilename: "getBalance", statusCode: .unauthorized)
                     subject = EthereumAPIClient(mockTeapot: mockTeapot)
 
                     waitUntil { done in

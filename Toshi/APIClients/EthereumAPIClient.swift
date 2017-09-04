@@ -52,18 +52,13 @@ public class EthereumAPIClient: NSObject {
     public func createUnsignedTransaction(parameters: [String: Any], completion: @escaping ((_ unsignedTransaction: String?, _ error: Error?) -> Void)) {
         let json = RequestParameter(parameters)
 
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.activeTeapot.post("/v1/tx/skel", parameters: json) { result in
-                switch result {
-                case .success(let json, let response):
-                    print(response)
-                    completion(json!.dictionary!["tx"] as? String, nil)
-                case .failure(let json, let response, let error):
-                    print(response)
-                    print(json ?? "")
-                    print(error)
-                    completion(nil, error)
-                }
+        self.activeTeapot.post("/v1/tx/skel", parameters: json) { result in
+            switch result {
+            case .success(let json, _):
+                completion(json?.dictionary!["tx"] as? String, nil)
+            case .failure(_, _, let error):
+                print(error)
+                completion(nil, error)
             }
         }
     }
@@ -99,61 +94,58 @@ public class EthereumAPIClient: NSObject {
 
             let json = RequestParameter(params)
 
-            DispatchQueue.global(qos: .userInitiated).async {
-                self.activeTeapot.post(path, parameters: json, headerFields: headers) { result in
-                    switch result {
-                    case .success(let json, let response):
-                        print(response)
-                        print(json ?? "")
-                        completion(json, nil)
-                    case .failure(let json, let response, let error):
-                        print(response)
-                        print(json ?? "")
-                        print(error)
-                        guard let jsonError = (json?.dictionary?["errors"] as? [[String: Any]])?.first else {
-                            completion(nil, error)
-                            return
-                        }
-                        
-                        let json = RequestParameter(jsonError)
-                        completion(json, error)
+            self.activeTeapot.post(path, parameters: json, headerFields: headers) { result in
+                switch result {
+                case .success(let json, _):
+                    completion(json, nil)
+                case .failure(let json, _, let error):
+                    print(error)
+                    guard let jsonError = (json?.dictionary?["errors"] as? [[String: Any]])?.first else {
+                        completion(nil, error)
+                        return
                     }
+
+                    let json = RequestParameter(jsonError)
+                    completion(json, error)
                 }
             }
         }
     }
 
     public func getBalance(address: String, completion: @escaping ((_ balance: NSDecimalNumber, _ error: Error?) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.activeTeapot.get("/v1/balance/\(address)") { (result: NetworkResult) in
-                switch result {
-                case .success(let json, let response):
-                    let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "Could not fetch balance."])
-                    guard response.statusCode == 200 else { completion(0, error); return }
-                    guard let json = json?.dictionary else { completion(0, error); return }
 
-                    let unconfirmedBalanceString = json["unconfirmed_balance"] as? String ?? "0"
-                    let unconfirmedBalance = NSDecimalNumber(hexadecimalString: unconfirmedBalanceString)
+        self.activeTeapot.get("/v1/balance/\(address)") { (result: NetworkResult) in
+            var balance: NSDecimalNumber = .zero
+            var resultError: Error?
 
-                    TokenUser.current?.balance = unconfirmedBalance
+            switch result {
+            case .success(let json, let response):
+                let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "Could not fetch balance."])
+                guard response.statusCode == 200 else { completion(0, error); return }
+                guard let json = json?.dictionary else { completion(0, error); return }
 
-                    completion(unconfirmedBalance, nil)
-                case .failure(let json, let response, let error):
-                    completion(0, error)
-                    print(error)
-                    print(response)
-                    print(json ?? "")
-                }
+                let unconfirmedBalanceString = json["unconfirmed_balance"] as? String ?? "0"
+                let unconfirmedBalance = NSDecimalNumber(hexadecimalString: unconfirmedBalanceString)
+
+                TokenUser.current?.balance = unconfirmedBalance
+                balance = unconfirmedBalance
+
+            case .failure(let json, _, let error):
+                resultError = error
+                print(error)
+            }
+
+            DispatchQueue.main.async {
+                completion(balance, resultError)
             }
         }
+
     }
 
     public func registerForMainNetworkPushNotifications() {
-        timestamp(mainTeapot) { timestamp, error in
+        timestamp(mainTeapot) { timestamp, _ in
             guard let timestamp = timestamp else { return }
-
-            self.registerForPushNotifications(timestamp, teapot: self.mainTeapot) { _ in
-            }
+            self.registerForPushNotifications(timestamp, teapot: self.mainTeapot) { _ in }
         }
     }
 
@@ -165,39 +157,38 @@ public class EthereumAPIClient: NSObject {
 
         switchedNetworkTeapot.baseURL = URL(string: NetworkSwitcher.shared.activeNetworkBaseUrl)!
 
-        timestamp(switchedNetworkTeapot) { timestamp, error in
+        timestamp(switchedNetworkTeapot) { timestamp, _ in
             guard let timestamp = timestamp else { return }
             self.registerForPushNotifications(timestamp, teapot: self.switchedNetworkTeapot, completion: completion)
         }
     }
 
     public func deregisterFromMainNetworkPushNotifications() {
-        timestamp(mainTeapot) { timestamp, error in
+        timestamp(mainTeapot) { timestamp, _ in
             guard let timestamp = timestamp else { return }
             self.deregisterFromPushNotifications(timestamp, teapot: self.mainTeapot)
         }
     }
 
-    public func deregisterFromSwitchedNetworkPushNotifications(completion: ((_ success: Bool, _ message: String?) -> Void)? = nil) {
-        timestamp(switchedNetworkTeapot) { timestamp, error in
+    public func deregisterFromSwitchedNetworkPushNotifications(completion: @escaping ((_ success: Bool, _ message: String?) -> Void) = { (Bool, String) in }) {
+
+        timestamp(switchedNetworkTeapot) { timestamp, _ in
             guard let timestamp = timestamp else { return }
             self.deregisterFromPushNotifications(timestamp, teapot: self.switchedNetworkTeapot, completion: completion)
         }
     }
 
     fileprivate func timestamp(_ teapot: Teapot, _ completion: @escaping ((_ timestamp: String?, _ error: Error?) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            teapot.get("/v1/timestamp") { (result: NetworkResult) in
-                switch result {
-                case .success(let json, _):
-                    guard let json = json?.dictionary else { fatalError() }
-                    guard let timestamp = json["timestamp"] as? Int else { fatalError("Timestamp should be an integer") }
+        teapot.get("/v1/timestamp") { (result: NetworkResult) in
+            switch result {
+            case .success(let json, _):
+                guard let json = json?.dictionary else { fatalError() }
+                guard let timestamp = json["timestamp"] as? Int else { fatalError("Timestamp should be an integer") }
 
-                    completion(String(timestamp), nil)
-                case .failure(_, _, let error):
-                    completion(nil, error)
-                    print(error)
-                }
+                completion(String(timestamp), nil)
+            case .failure(_, _, let error):
+                completion(nil, error)
+                print(error)
             }
         }
     }
@@ -226,27 +217,20 @@ public class EthereumAPIClient: NSObject {
 
         let json = RequestParameter(params)
 
-        DispatchQueue.global(qos: .userInitiated).async {
-            teapot.post(path, parameters: json, headerFields: headerFields) { result in
-                switch result {
-                case .success(let json, let response):
-                    print(json ?? "")
-                    print(response)
-                    print("\n +++ Registered for :\(teapot.baseURL)")
-
-                    completion?(true, "json: \(json?.dictionary ?? [String: Any]()) response: \(response)")
-                case .failure(let json, let response, let error):
-                    print(json ?? "")
-                    print(response)
-                    print(error)
-
-                    completion?(false, "json: \(json?.dictionary ?? [String: Any]()) response: \(response), error: \(error)")
-                }
+        teapot.post(path, parameters: json, headerFields: headerFields) { result in
+            switch result {
+            case .success(let json, let response):
+                print("\n +++ Registered for :\(teapot.baseURL)")
+                completion?(true, "json: \(json?.dictionary ?? [String: Any]()) response: \(response)")
+            case .failure(let json, let response, let error):
+                print(error)
+                completion?(false, "json: \(json?.dictionary ?? [String: Any]()) response: \(response), error: \(error)")
             }
         }
     }
 
-    fileprivate func deregisterFromPushNotifications(_ timestamp: String, teapot: Teapot, completion: ((_ success: Bool, _ message: String?) -> Void)? = nil) {
+    fileprivate func deregisterFromPushNotifications(_ timestamp: String, teapot: Teapot, completion: @escaping ((_ success: Bool, _ message: String?) -> Void) = { (Bool, String) in }) {
+
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
 
         let cereal = Cereal.shared
@@ -256,7 +240,7 @@ public class EthereumAPIClient: NSObject {
         let params = ["registration_id": appDelegate.token, "address": cereal.paymentAddress]
 
         guard let data = try? JSONSerialization.data(withJSONObject: params, options: []), let payloadString = String(data: data, encoding: .utf8) else {
-            completion?(false, "Invalid payload, request could not be executed")
+            completion(false, "Invalid payload, request could not be executed")
             return
         }
 
@@ -271,24 +255,15 @@ public class EthereumAPIClient: NSObject {
 
         let json = RequestParameter(params)
 
-        DispatchQueue.global(qos: .userInitiated).async {
             teapot.post(path, parameters: json, headerFields: headerFields) { result in
                 switch result {
                 case .success(let json, let response):
-                    print(json ?? "")
-                    print(response)
-
                     print("\n --- DE-registered from :\(teapot.baseURL)")
-
-                    completion?(true, "json:\(json?.dictionary ?? [String: Any]()), response: \(response)")
+                    completion(true, "json:\(json?.dictionary ?? [String: Any]()), response: \(response)")
                 case .failure(let json, let response, let error):
-                    print(json ?? "")
-                    print(response)
                     print(error)
-
-                    completion?(false, "json:\(json?.dictionary ?? [String: Any]()), response: \(response), error: \(error)")
+                    completion(false, "json:\(json?.dictionary ?? [String: Any]()), response: \(response), error: \(error)")
                 }
             }
-        }
     }
 }

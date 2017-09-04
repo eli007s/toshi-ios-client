@@ -2,7 +2,7 @@
   "commitish" : "cc5fad73d0a3115a5fbc501ecc3ac673ea9abe43",
   "iOS" : [
     {
-      "hash" : "c442c65f46e9d5f2200cad7d8228aefa4e6dcd03fff5f6e1f5d00159d0cbdde4",
+      "hash" : "c2cd70f1e38c3222a12ce3a28ac6b842c9efb379e6ae67ce170224f83473fc1b",
       "name" : "SweetUIKit"
     }
   ]
