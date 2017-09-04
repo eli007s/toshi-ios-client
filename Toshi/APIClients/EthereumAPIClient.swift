@@ -36,6 +36,12 @@ public class EthereumAPIClient: NSObject {
         return NetworkSwitcher.shared.activeNetworkBaseUrl
     }
 
+    convenience init(mockTeapot: MockTeapot) {
+        self.init()
+        self.switchedNetworkTeapot = mockTeapot
+        self.mainTeapot = mockTeapot
+    }
+
     fileprivate override init() {
         mainTeapot = Teapot(baseURL: URL(string: NetworkSwitcher.shared.defaultNetworkBaseUrl)!)
         switchedNetworkTeapot = Teapot(baseURL: URL(string: NetworkSwitcher.shared.defaultNetworkBaseUrl)!)
@@ -63,7 +69,12 @@ public class EthereumAPIClient: NSObject {
     }
 
     public func sendSignedTransaction(originalTransaction: String, transactionSignature: String, completion: @escaping ((_ json: RequestParameter?, _ error: Error?) -> Void)) {
-        timestamp(activeTeapot) { timestamp in
+        timestamp(activeTeapot) { timestamp, error in
+            guard let timestamp = timestamp else {
+                completion(nil, error)
+                return
+            }
+
             let cereal = Cereal.shared
             let path = "/v1/tx"
             let params = [
@@ -138,7 +149,9 @@ public class EthereumAPIClient: NSObject {
     }
 
     public func registerForMainNetworkPushNotifications() {
-        timestamp(mainTeapot) { timestamp in
+        timestamp(mainTeapot) { timestamp, error in
+            guard let timestamp = timestamp else { return }
+
             self.registerForPushNotifications(timestamp, teapot: self.mainTeapot) { _ in
             }
         }
@@ -152,24 +165,27 @@ public class EthereumAPIClient: NSObject {
 
         switchedNetworkTeapot.baseURL = URL(string: NetworkSwitcher.shared.activeNetworkBaseUrl)!
 
-        timestamp(switchedNetworkTeapot) { timestamp in
+        timestamp(switchedNetworkTeapot) { timestamp, error in
+            guard let timestamp = timestamp else { return }
             self.registerForPushNotifications(timestamp, teapot: self.switchedNetworkTeapot, completion: completion)
         }
     }
 
     public func deregisterFromMainNetworkPushNotifications() {
-        timestamp(mainTeapot) { timestamp in
+        timestamp(mainTeapot) { timestamp, error in
+            guard let timestamp = timestamp else { return }
             self.deregisterFromPushNotifications(timestamp, teapot: self.mainTeapot)
         }
     }
 
     public func deregisterFromSwitchedNetworkPushNotifications(completion: ((_ success: Bool, _ message: String?) -> Void)? = nil) {
-        timestamp(switchedNetworkTeapot) { timestamp in
+        timestamp(switchedNetworkTeapot) { timestamp, error in
+            guard let timestamp = timestamp else { return }
             self.deregisterFromPushNotifications(timestamp, teapot: self.switchedNetworkTeapot, completion: completion)
         }
     }
 
-    fileprivate func timestamp(_ teapot: Teapot, _ completion: @escaping ((_ timestamp: String) -> Void)) {
+    fileprivate func timestamp(_ teapot: Teapot, _ completion: @escaping ((_ timestamp: String?, _ error: Error?) -> Void)) {
         DispatchQueue.global(qos: .userInitiated).async {
             teapot.get("/v1/timestamp") { (result: NetworkResult) in
                 switch result {
@@ -177,8 +193,9 @@ public class EthereumAPIClient: NSObject {
                     guard let json = json?.dictionary else { fatalError() }
                     guard let timestamp = json["timestamp"] as? Int else { fatalError("Timestamp should be an integer") }
 
-                    completion(String(timestamp))
+                    completion(String(timestamp), nil)
                 case .failure(_, _, let error):
+                    completion(nil, error)
                     print(error)
                 }
             }

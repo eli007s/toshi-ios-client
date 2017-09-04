@@ -37,6 +37,11 @@ public final class ExchangeRateAPIClient {
         }
     }
 
+    convenience init(teapot: Teapot) {
+        self.init()
+        self.teapot = teapot
+    }
+
     init() {
         baseURL = URL(string: ToshiExchangeRateServiceBaseURLPath)!
         teapot = Teapot(baseURL: baseURL)
@@ -60,10 +65,7 @@ public final class ExchangeRateAPIClient {
 
     public func getRate(_ completion: @escaping ((_ rate: Decimal?) -> Void)) {
         DispatchQueue.global(qos: .userInitiated).async {
-            guard let code = TokenUser.current?.localCurrency else {
-                completion(nil)
-                return
-            }
+            let code = TokenUser.current?.localCurrency ?? TokenUser.defaultCurrency
 
             self.teapot.get("/v1/rates/ETH/\(code)") { (result: NetworkResult) in
                 switch result {

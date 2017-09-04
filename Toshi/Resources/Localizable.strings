@@ -98,3 +98,6 @@
 "currency_picker_header_suggested" = "Suggested";
 "currency_picker_header_other" = "Other";
 
+/* Network Requests */
+"request_generic_error" = "Something went wrong";
+

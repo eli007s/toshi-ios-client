@@ -65,7 +65,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Required to upload pictures.</string>
 	<key>TokenChatServiceBaseURL</key>
-	<string>https://chat.service.tokenbrowser.com</string>
+	<string>https://chat.development.service.toshi.org</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SF-UI-Display-Black.otf</string>

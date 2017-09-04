@@ -145,50 +145,50 @@ class BrowseController: SearchableCollectionController {
 
     private func loadItems() {
 
-        AppsAPIClient.shared.getTopRatedApps { apps, error in
+        AppsAPIClient.shared.getTopRatedApps { [weak self] apps, error in
             if let error = error {
                 let alertController = UIAlertController.errorAlert(error as NSError)
                 Navigator.presentModally(alertController)
             }
 
-            self.items[0] = apps ?? []
-            self.collectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
-            self.collectionView.collectionViewLayout.invalidateLayout()
+            self?.items[0] = apps ?? []
+            self?.collectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
+            self?.collectionView.collectionViewLayout.invalidateLayout()
         }
 
-        AppsAPIClient.shared.getFeaturedApps { apps, error in
+        AppsAPIClient.shared.getFeaturedApps { [weak self] apps, error in
             if let error = error {
                 let alertController = UIAlertController.errorAlert(error as NSError)
                 Navigator.presentModally(alertController)
             }
 
-            self.items[1] = apps ?? []
-            self.collectionView.reloadItems(at: [IndexPath(item: 1, section: 0)])
-            self.collectionView.collectionViewLayout.invalidateLayout()
+            self?.items[1] = apps ?? []
+            self?.collectionView.reloadItems(at: [IndexPath(item: 1, section: 0)])
+            self?.collectionView.collectionViewLayout.invalidateLayout()
         }
 
-        IDAPIClient.shared.getTopRatedPublicUsers { users, error in
+        IDAPIClient.shared.getTopRatedPublicUsers { [weak self] users, error in
 
             if let error = error {
                 let alertController = UIAlertController.errorAlert(error as NSError)
                 Navigator.presentModally(alertController)
             }
 
-            self.items[2] = users ?? []
-            self.collectionView.reloadItems(at: [IndexPath(item: 2, section: 0)])
-            self.collectionView.collectionViewLayout.invalidateLayout()
+            self?.items[2] = users
+            self?.collectionView.reloadItems(at: [IndexPath(item: 2, section: 0)])
+            self?.collectionView.collectionViewLayout.invalidateLayout()
         }
 
-        IDAPIClient.shared.getLatestPublicUsers { users, error in
+        IDAPIClient.shared.getLatestPublicUsers { [weak self] users, error in
 
             if let error = error {
                 let alertController = UIAlertController.errorAlert(error as NSError)
                 Navigator.presentModally(alertController)
             }
 
-            self.items[3] = users ?? []
-            self.collectionView.reloadItems(at: [IndexPath(item: 3, section: 0)])
-            self.collectionView.collectionViewLayout.invalidateLayout()
+            self?.items[3] = users
+            self?.collectionView.reloadItems(at: [IndexPath(item: 3, section: 0)])
+            self?.collectionView.collectionViewLayout.invalidateLayout()
         }
     }
 
@@ -205,14 +205,14 @@ class BrowseController: SearchableCollectionController {
         } else {
             hideOpenURLButtonIfNeeded()
 
-            AppsAPIClient.shared.search(searchText) { apps, error in
+            AppsAPIClient.shared.search(searchText) { [weak self] apps, error in
                 if let error = error {
                     let alertController = UIAlertController.errorAlert(error as NSError)
                     Navigator.presentModally(alertController)
                 }
 
-                if searchText == self.searchBar.text {
-                    self.searchResultView.searchResults = apps
+                if searchText == self?.searchBar.text {
+                    self?.searchResultView.searchResults = apps
                 }
             }
         }

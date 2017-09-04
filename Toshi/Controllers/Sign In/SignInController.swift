@@ -164,7 +164,7 @@ open class SignInController: UIViewController {
         }
 
         let idClient = IDAPIClient.shared
-        idClient.retrieveUser(username: cereal.address) { user in
+        idClient.retrieveUser(username: cereal.address) { [weak self] user in
             if let user = user {
                 Cereal.shared = cereal
                 UserDefaults.standard.set(false, forKey: RequiresSignIn)
@@ -177,11 +177,15 @@ open class SignInController: UIViewController {
                 guard let delegate = UIApplication.shared.delegate as? AppDelegate else { return }
                 delegate.signInUser()
 
-                self.navigationController?.dismiss(animated: true, completion: nil)
+                self?.navigationController?.dismiss(animated: true, completion: nil)
             } else {
                 let alert = UIAlertController.dismissableAlert(title: Localized("No such user"))
                 Navigator.presentModally(alert)
             }
         }
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .default
     }
 }

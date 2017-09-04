@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>88</string>
+	<string>91</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -48,7 +48,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>InitialGreetingAddress</key>
-	<string>0xdc1eb58ae581c2e70dd5af5c454851fa2b24acd7</string>
+	<string>0x1cdda5e6c54adfe857aad6f244d4a452b66cc798</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -65,7 +65,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Required to upload pictures.</string>
 	<key>TokenChatServiceBaseURL</key>
-	<string>https://chat.service.tokenbrowser.com</string>
+	<string>https://chat.service.toshi.org</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SF-UI-Display-Black.otf</string>

@@ -42,6 +42,8 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 @property (nonatomic, copy, readwrite) NSString *token;
 @property (nonatomic) NSString *voipToken;
 
+@property (nonatomic, assign) BOOL hasBeenActivated;
+
 @end
 
 @implementation AppDelegate
@@ -53,28 +55,17 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
     NSString *tokenChatServiceBaseURL = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"TokenChatServiceBaseURL"];
     [OWSSignalService setBaseURLPath:tokenChatServiceBaseURL];
 
-    [[IDAPIClient shared] updateContacts];
-
     // Set the seed the generator for rand().
     //
     // We should always use arc4random() instead of rand(), but we
     // still want to ensure that any third-party code that uses rand()
     // gets random values.
+
     srand((unsigned int)time(NULL));
-    [self verifyDBKeysAvailableBeforeBackgroundLaunch];
 
     [Fabric with:@[[Crashlytics class]]];
-    
+
     [self setupBasicAppearance];
-
-    if ([Yap isCurrentUserDataAccessible]) {
-
-        [TokenUser retrieveCurrentUser];
-
-        [self setupDB];
-    }
-
-    [self configureAndPresentWindow];
 
     return YES;
 }
@@ -111,15 +102,18 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 - (void)configureAndPresentWindow {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [Theme viewBackgroundColor];
-    self.window.rootViewController = [[TabBarController alloc] init];
+    TabBarController *tabBarController = [[TabBarController alloc] init];
+    self.window.rootViewController = tabBarController;
 
     [self.window makeKeyAndVisible];
 
-    if ([Yap isCurrentUserDataAccessible] == false) {
+    if ([Yap isUserDatabaseFileAccessible] == false) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString addressChangeAlertShown]]; //suppress alert for users created >=v1.1.2
         [[NSUserDefaults standardUserDefaults] synchronize];
 
         [self presentSplash];
+    } else {
+        [tabBarController setupControllers];
     }
 }
 
@@ -137,7 +131,10 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 
 - (void)signOutUser
 {
+    __weak typeof(self)weakSelf = self;
     [TSAccountManager unregisterTextSecureWithSuccess:^{
+
+        typeof(self)strongSelf = weakSelf;
 
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UserDidSignOut" object:nil];
         [AvatarManager.shared cleanCache];
@@ -151,6 +148,8 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 
         [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 
+        [strongSelf.contactsManager refreshContacts];
+
          exit(0);
     } failure:^(NSError *error) {
         UIAlertController *alert = [UIAlertController dismissableAlertWithTitle:@"Could not sign out" message:@"Error attempting to unregister from chat service. Our engineers are looking into it."];
@@ -161,6 +160,8 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 
 - (void)createNewUser
 {
+    [[Navigator tabbarController] setupControllers];
+    
     __weak typeof(self)weakSelf = self;
     [[IDAPIClient shared] registerUserIfNeeded:^(UserRegisterStatus status, NSString *message){
 
@@ -184,6 +185,8 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 {
     [self showNetworkAlertIfNeeded];
     [self setupDB];
+
+    [[Navigator tabbarController] setupControllers];
 }
 
 - (void)setupDB
@@ -195,6 +198,8 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 }
 
 - (void)didCreateUser {
+    [self.contactsManager refreshContacts];
+
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:RequiresSignIn];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
@@ -203,8 +208,15 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 
 - (void)presentSplash
 {
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed: @"launch-screen"]];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.userInteractionEnabled = YES;
+    [self.window addSubview:imageView];
+
     SplashNavigationController *splashNavigationController = [[SplashNavigationController alloc] init];
-    [self.window.rootViewController presentViewController:splashNavigationController animated:NO completion:nil];
+    [self.window.rootViewController presentViewController:splashNavigationController animated:NO completion:^{
+        [imageView removeFromSuperview];
+    }];
 }
 
 - (void)setupBasicAppearance {
@@ -289,10 +301,53 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
     }
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    if (Yap.isCurrentUserDataAccessible == false) {
+- (BOOL)__tryToOpenDB
+{
+    if ([Yap isUserDatabaseFileAccessible]) {
+
+        [TokenUser retrieveCurrentUser];
+
+        [self setupDB];
+
+        return YES;
+    }
+
+    if ([Yap isUserDatabasePasswordAccessible]) {
+        CLS_LOG(@"User database file not accessible while password present in the keychain");
+        return NO;
+    }
+
+    return YES;
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    if (![Yap isUserDatabaseFileAccessible] && ![Yap isUserDatabasePasswordAccessible] && !self.hasBeenActivated) {
+        [self configureAndPresentWindow];
+        self.hasBeenActivated = YES;
+
         return;
     }
+
+    BOOL shouldProceedToDBSetup = !self.hasBeenActivated && ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground);
+    if (shouldProceedToDBSetup) {
+
+        if ([self __tryToOpenDB]) {
+            [self configureAndPresentWindow];
+        } else {
+
+            // There might be a case when filesystem state is weird and it doesn't return true results, saying file is not present even if it is.
+            // to determine this we might check keychain for database password being there
+            // in this case we want to wait a bit and try to open file again
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if ([self __tryToOpenDB]) {
+                    [self configureAndPresentWindow];
+                }
+            });
+        }
+    }
+
+    self.hasBeenActivated = YES;
 
     [[TSAccountManager sharedInstance] ifRegistered:YES runAsync:^{
         // We're double checking that the app is active, to be sure since we
@@ -348,21 +403,15 @@ NSString *const RequiresSignIn = @"RequiresSignIn";
 
 - (void)deactivateScreenProtection
 {
+    if (self.screenProtectionWindow.alpha == 0) {
+        return;
+    }
+
     [UIView animateWithDuration:0.3 animations:^{
         self.screenProtectionWindow.alpha = 0;
     } completion:^(BOOL finished) {
         self.screenProtectionWindow.hidden = YES;
     }];
-}
-
-- (void)verifyDBKeysAvailableBeforeBackgroundLaunch {
-    if (UIApplication.sharedApplication.applicationState != UIApplicationStateBackground) {
-        return;
-    }
-
-    if (![TSStorageManager isDatabasePasswordAccessible]) {
-        exit(0);
-    }
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {

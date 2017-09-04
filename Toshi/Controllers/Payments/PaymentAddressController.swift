@@ -145,7 +145,7 @@ extension PaymentAddressController: ScannerViewControllerDelegate {
     }
 
     private func fillPaymentAddress(username: String) {
-        IDAPIClient.shared.retrieveContact(username: username) { [weak self] contact in
+        IDAPIClient.shared.retrieveUser(username: username) { [weak self] contact in
             guard let contact = contact else {
                 self?.scannerController.startScanning()
 

@@ -40,5 +40,6 @@
 - (nullable UIImage *)imageForPhoneIdentifier:(nullable NSString *)phoneNumber;
 
 - (void)refreshContacts;
+- (void)refreshContactWithAddress:(NSString *_Nonnull)address NS_SWIFT_NAME(refreshContact(with:));
 
 @end

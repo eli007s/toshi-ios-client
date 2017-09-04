@@ -17,10 +17,6 @@ import UIKit
 
 public class SplashNavigationController: UINavigationController {
 
-    public override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .default
-    }
-
     convenience init() {
         self.init(rootViewController: SplashViewController())
         title = "Sign in"

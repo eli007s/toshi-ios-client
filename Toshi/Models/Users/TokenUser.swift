@@ -108,7 +108,8 @@ public class TokenUser: NSObject, NSCoding {
             NotificationCenter.default.post(name: .currentUserUpdated, object: nil)
         }
     }
-    private static var defaultCurrency: String {
+    
+    static var defaultCurrency: String {
         return Locale.current.currencyCode ?? "USD"
     }
 

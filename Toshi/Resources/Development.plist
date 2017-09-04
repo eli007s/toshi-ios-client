@@ -63,7 +63,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Required to upload pictures.</string>
 	<key>TokenChatServiceBaseURL</key>
-	<string>https://token-chat-service-development.herokuapp.com</string>
+	<string>https://chat.internal.service.toshi.org</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SF-UI-Display-Black.otf</string>

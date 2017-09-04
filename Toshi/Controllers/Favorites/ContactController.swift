@@ -419,8 +419,8 @@ public class ContactController: UIViewController {
     }
 
     fileprivate func updateReputation() {
-        RatingsClient.shared.scores(for: contact.address) { ratingScore in
-            self.reputationView.setScore(ratingScore)
+        RatingsClient.shared.scores(for: contact.address) { [weak self] ratingScore in
+            self?.reputationView.setScore(ratingScore)
         }
     }
 }
@@ -434,8 +434,8 @@ extension ContactController: ActivityIndicating {
 extension ContactController: RateUserControllerDelegate {
     func didRate(_ user: TokenUser, rating: Int, review: String) {
         dismiss(animated: true) {
-            RatingsClient.shared.submit(userId: user.address, rating: rating, review: review) {
-                self.updateReputation()
+            RatingsClient.shared.submit(userId: user.address, rating: rating, review: review) { [weak self] in
+                self?.updateReputation()
             }
         }
     }
@@ -458,10 +458,10 @@ extension ContactController: PaymentControllerDelegate {
 
         showActivityIndicator()
 
-        etherAPIClient.createUnsignedTransaction(parameters: parameters) { transaction, error in
+        etherAPIClient.createUnsignedTransaction(parameters: parameters) { [weak self] transaction, error in
 
             guard let transaction = transaction as String? else {
-                self.hideActivityIndicator()
+                self?.hideActivityIndicator()
                 let alert = UIAlertController.dismissableAlert(title: "Error completing transaction", message: error?.localizedDescription)
                 Navigator.presentModally(alert)
 
@@ -470,9 +470,10 @@ extension ContactController: PaymentControllerDelegate {
 
             let signedTransaction = "0x\(Cereal.shared.signWithWallet(hex: transaction))"
 
-            etherAPIClient.sendSignedTransaction(originalTransaction: transaction, transactionSignature: signedTransaction) { json, error in
+            etherAPIClient.sendSignedTransaction(originalTransaction: transaction, transactionSignature: signedTransaction) { [weak self] json, error in
+                guard let strongSelf = self else { return }
 
-                self.hideActivityIndicator()
+                strongSelf.hideActivityIndicator()
 
                 if error != nil {
 
@@ -488,11 +489,11 @@ extension ContactController: PaymentControllerDelegate {
                     let payment = SofaPayment(txHash: txHash, valueHex: value.toHexString)
 
                     // send message to thread
-                    let thread = ChatsInteractor.getOrCreateThread(for: self.contact.address)
+                    let thread = ChatsInteractor.getOrCreateThread(for: strongSelf.contact.address)
                     let timestamp = NSDate.ows_millisecondsSince1970(for: Date())
                     let outgoingMessage = TSOutgoingMessage(timestamp: timestamp, in: thread, messageBody: payment.content)
 
-                    self.messageSender?.send(outgoingMessage, success: {
+                    strongSelf.messageSender?.send(outgoingMessage, success: {
                         print("message sent")
                     }, failure: { error in
                         print(error)

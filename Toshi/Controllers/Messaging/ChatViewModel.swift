@@ -166,8 +166,10 @@ final class ChatViewModel {
         let thread = self.thread
         guard let text = inputViewText else { return }
 
-        editingDatabaseConnection?.asyncReadWrite { transaction in
-            thread.setDraft(text, transaction: transaction)
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.editingDatabaseConnection?.asyncReadWrite { transaction in
+                thread.setDraft(text, transaction: transaction)
+            }
         }
     }
 
@@ -265,13 +267,15 @@ final class ChatViewModel {
         let thread = self.thread
         var placeholder: String?
 
-        editingDatabaseConnection?.asyncReadWrite({ transaction in
-            placeholder = thread.currentDraft(with: transaction)
-        }, completionBlock: {
-            DispatchQueue.main.async {
-                completion(placeholder)
-            }
-        })
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.editingDatabaseConnection?.asyncReadWrite({ transaction in
+                placeholder = thread.currentDraft(with: transaction)
+            }, completionBlock: {
+                DispatchQueue.main.async {
+                    completion(placeholder)
+                }
+            })
+        }
     }
 
     func displayState(for button: SofaMessage.Button?) -> DisplayState {

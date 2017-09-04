@@ -48,33 +48,35 @@ class SettingsSectionHeader: UIView {
         self.init()
         clipsToBounds = true
 
-        let margin: CGFloat = 15
-
         titleLabel.text = title.uppercased()
+        errorLabel.text = error
+
+        preservesSuperviewLayoutMargins = true
+
         addSubview(titleLabel)
 
         titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 
-        if let error = error {
-            errorLabel.text = error
+        if self.errorLabel.text != nil {
+
             addSubview(errorLabel)
             addSubview(errorImage)
 
             NSLayoutConstraint.activate([
-                self.titleLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: margin),
+                NSLayoutConstraint.constraints(withVisualFormat: "H:|-[titleLabel]", options: [], metrics: nil, views: ["titleLabel": self.titleLabel]).first!,
 
                 self.errorLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
                 self.errorLabel.leftAnchor.constraint(greaterThanOrEqualTo: self.titleLabel.rightAnchor),
                 self.errorLabel.rightAnchor.constraint(equalTo: self.errorImage.leftAnchor, constant: -5),
 
                 self.errorImage.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-                self.errorImage.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -margin)
-            ])
+                NSLayoutConstraint.constraints(withVisualFormat: "H:[errorImage]-|", options: [], metrics: nil, views: ["errorImage": self.errorImage]).first!
+                ])
         } else {
             NSLayoutConstraint.activate([
-                self.titleLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: margin),
-                self.titleLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -margin)
-            ])
+                self.titleLabel.leftAnchor.constraint(equalTo: self.leftAnchor),
+                self.titleLabel.rightAnchor.constraint(equalTo: self.rightAnchor)
+                ])
         }
     }
 

@@ -80,8 +80,8 @@ class PaymentConfirmationController: AlertController {
 
             customContentView = customView
 
-            RatingsClient.shared.scores(for: userInfo.address) { score in
-                if let view = self.customContentView as? PaymentRequestInfoView {
+            RatingsClient.shared.scores(for: userInfo.address) { [weak self] score in
+                if let view = self?.customContentView as? PaymentRequestInfoView {
                     view.ratingView.set(rating: Float(score.averageRating), animated: true)
                     view.ratingCountLabel.text = "(\(score.reviewCount))"
                 }

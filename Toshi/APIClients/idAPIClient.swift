@@ -41,12 +41,23 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
         }
     }()
 
-    let contactUpdateQueue = DispatchQueue(label: "token.updateContactsQueue")
+    private lazy var updateOperationQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 2 //we update collections under "storedContactKey" and "favoritesCollectionKey" concurrently
+        queue.name = "Update contacts queue"
+
+        return queue
+    }()
 
     public var baseURL: URL
 
+    convenience init(teapot: Teapot) {
+        self.init()
+        self.teapot = teapot
+    }
+
     private override init() {
-        baseURL = URL(string: TokenIdServiceBaseURLPath)!
+        baseURL = URL(string: ToshiIdServiceBaseURLPath)!
         teapot = Teapot(baseURL: baseURL)
 
         super.init()
@@ -55,36 +66,34 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
     /// We use a background queue and a semaphore to ensure we only update the UI
     /// once all the contacts have been processed.
     func updateContacts() {
+        updateOperationQueue.cancelAllOperations()
+
         updateContacts(for: TokenUser.storedContactKey)
         updateContacts(for: TokenUser.favoritesCollectionKey)
     }
 
     private func updateContacts(for collectionKey: String) {
-        contactUpdateQueue.async {
+        let operation = BlockOperation()
+        operation.addExecutionBlock { [weak self] in
             guard let contactsData = Yap.sharedInstance.retrieveObjects(in: collectionKey) as? [Data] else { return }
-            let semaphore = DispatchSemaphore(value: 0)
 
             for contactData in contactsData {
                 guard let dictionary = try? JSONSerialization.jsonObject(with: contactData, options: []) else { continue }
 
                 if let dictionary = dictionary as? [String: Any] {
                     let tokenContact = TokenUser(json: dictionary)
-                    self.findContact(name: tokenContact.address) { updatedContact in
-                        if let updatedContact = updatedContact {
+                    self?.findContact(name: tokenContact.address) { updatedContact in
 
-                            DispatchQueue.main.async {
-                                Yap.sharedInstance.insert(object: updatedContact.json, for: updatedContact.address, in: collectionKey)
-                            }
+                        if let updatedContact = updatedContact {
+                            Yap.sharedInstance.insert(object: updatedContact.json, for: updatedContact.address, in: collectionKey)
                         }
 
-                        semaphore.signal()
                     }
-                    // calls to `wait()` need to be balanced with calls to `signal()`
-                    // remember to call it _after_ the code we need to run asynchronously.
-                    _ = semaphore.wait(timeout: .distantFuture)
                 }
             }
         }
+
+        updateOperationQueue.addOperation(operation)
     }
 
     func updateContact(with identifier: String) {
@@ -97,14 +106,15 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
                         NotificationCenter.default.post(name: .currentUserUpdated, object: nil)
                     }
 
+                    guard identifier != Cereal.shared.address else { return }
                     guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-                    appDelegate.contactsManager.refreshContacts()
+                    appDelegate.contactsManager.refreshContact(with: identifier)
                 }
             }
         }
     }
 
-    func fetchTimestamp(_ completion: @escaping ((Int) -> Void)) {
+    func fetchTimestamp(_ completion: @escaping ((_ timestamp: Int?, _ error: Error?) -> Void)) {
         DispatchQueue.global(qos: .userInitiated).async {
             self.teapot.get("/v1/timestamp") { (result: NetworkResult) in
                 switch result {
@@ -114,8 +124,9 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
                         return
                     }
 
-                    completion(timestamp)
-                case .failure(_, let response, _):
+                    completion(timestamp, nil)
+                case .failure(_, let response, let error):
+                    completion(nil, error)
                     print(response)
                 }
             }
@@ -138,7 +149,12 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
                 return
             }
 
-            self.fetchTimestamp { timestamp in
+            self.fetchTimestamp { timestamp, error in
+                guard let timestamp = timestamp else {
+                    success(.failed, "Unable to fetch timestamp \(error)")
+                    return
+                }
+
                 let cereal = Cereal.shared
                 let path = "/v1/user"
                 let parameters = [
@@ -180,7 +196,12 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
     }
 
     public func updateAvatar(_ avatar: UIImage, completion: @escaping ((_ success: Bool) -> Void)) {
-        fetchTimestamp { timestamp in
+        fetchTimestamp { timestamp, error in
+            guard let timestamp = timestamp else {
+                completion(false)
+                return
+            }
+
             let cereal = Cereal.shared
             let path = "/v1/user"
             let boundary = "teapot.boundary"
@@ -217,7 +238,12 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
     }
 
     public func updateUser(_ userDict: [String: Any], completion: @escaping ((_ success: Bool, _ message: String?) -> Void)) {
-        fetchTimestamp { timestamp in
+        fetchTimestamp { timestamp, error in
+            guard let timestamp = timestamp else {
+                completion(false, "Unable to fetch timestamp \(error)")
+                return
+            }
+
             let cereal = Cereal.shared
             let path = "/v1/user"
 
@@ -250,35 +276,6 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
                         let message = errors?.first?["message"] as? String
                         completion(false, message)
                     }
-                }
-            }
-        }
-    }
-
-    /// Used to retrieve server-side contact data. For the current user, see retrieveUser(username: completion:)
-    ///
-    /// - Parameters:
-    ///   - username: username or id address
-    ///   - completion: called on completion
-    public func retrieveContact(username: String, completion: @escaping ((TokenUser?) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.teapot.get("/v1/user/\(username)", headerFields: ["Token-Timestamp": String(Int(Date().timeIntervalSince1970))]) { (result: NetworkResult) in
-                switch result {
-                case .success(let json, _):
-                    // we know it's a dictionary for this API
-                    guard let json = json?.dictionary else {
-                        completion(nil)
-                        return
-                    }
-
-                    let contact = TokenUser(json: json)
-
-                    completion(contact)
-                case .failure(let json, _, let error):
-                    print(error.localizedDescription)
-                    print(json?.dictionary ?? "")
-
-                    completion(nil)
                 }
             }
         }
@@ -325,27 +322,6 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
     }
 
     public func findContact(name: String, completion: @escaping ((TokenUser?) -> Void)) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.teapot.get("/v1/user/\(name)") { (result: NetworkResult) in
-                var contact: TokenUser?
-
-                switch result {
-                case .success(let json, _):
-                    guard let json = json?.dictionary else {
-                        completion(nil)
-                        return
-                    }
-
-                    contact = TokenUser(json: json)
-                    NotificationCenter.default.post(name: IDAPIClient.didFetchContactInfoNotification, object: contact)
-                case .failure(_, _, let error):
-                    print(error.localizedDescription)
-                }
-
-                completion(contact)
-            }
-        }
-
         contactCache.setObject(forKey: name, cacheBlock: { success, failure in
 
             DispatchQueue.global(qos: .userInitiated).async {
@@ -403,7 +379,7 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
         }
     }
 
-    public func getTopRatedPublicUsers(limit: Int = 10, completion: @escaping (_ apps: [TokenUser]?, _ error: Error?) -> Void) {
+    public func getTopRatedPublicUsers(limit: Int = 10, completion: @escaping (_ apps: [TokenUser], _ error: Error?) -> Void) {
 
         DispatchQueue.global(qos: .userInitiated).async {
             self.teapot.get("/v1/search/user?public=true&top=true&recent=false&limit=\(limit)") { (result: NetworkResult) in
@@ -426,7 +402,7 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
         }
     }
 
-    public func getLatestPublicUsers(limit: Int = 10, completion: @escaping (_ apps: [TokenUser]?, _ error: Error?) -> Void) {
+    public func getLatestPublicUsers(limit: Int = 10, completion: @escaping (_ apps: [TokenUser], _ error: Error?) -> Void) {
 
         DispatchQueue.global(qos: .userInitiated).async {
             self.teapot.get("/v1/search/user?public=true&top=false&recent=true&limit=\(limit)") { (result: NetworkResult) in
@@ -450,7 +426,12 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
     }
 
     public func reportUser(address: String, reason: String = "", completion: ((_ success: Bool, _ message: String) -> Void)? = nil) {
-        fetchTimestamp { timestamp in
+        fetchTimestamp { timestamp, error in
+            guard let timestamp = timestamp else {
+                completion?(false, "Unable to fetch timestamp \(error)")
+                return
+            }
+
             let cereal = Cereal.shared
             let path = "/v1/report"
 
@@ -493,10 +474,15 @@ public class IDAPIClient: NSObject, CacheExpiryDefault {
         }
     }
 
-    public func login(login_token: String, completion: ((_ success: Bool, _ message: String) -> Void)? = nil) {
-        fetchTimestamp { timestamp in
+    public func adminLogin(loginToken: String, completion: ((_ success: Bool, _ message: String) -> Void)? = nil) {
+        fetchTimestamp { timestamp, error in
+            guard let timestamp = timestamp else {
+                completion?(false, "Unable to fetch timestamp \(error)")
+                return
+            }
+
             let cereal = Cereal.shared
-            let path = "/v1/login/\(login_token)"
+            let path = "/v1/login/\(loginToken)"
 
             let signature = "0x\(cereal.signWithID(message: "GET\n\(path)\n\(timestamp)\n"))"
 

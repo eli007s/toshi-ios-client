@@ -84,7 +84,7 @@ class RatingsClient: NSObject {
     public var baseURL: URL
 
     private override init() {
-        baseURL = URL(string: TokenRatingsServiceBaseURLPath)!
+        baseURL = URL(string: ToshiRatingsServiceBaseURLPath)!
         teapot = Teapot(baseURL: baseURL)
 
         super.init()
@@ -144,9 +144,12 @@ class RatingsClient: NSObject {
                         Navigator.presentModally(alert)
                         completion?()
                     case .failure(let json, _, _):
-                        guard let json = json?.dictionary, let errors = json["errors"] as? [Any], let error = errors.first as? [String: Any], let message = error["message"] as? String else { return }
+                        var errorMessage = Localized("request_generic_error")
+                        if let json = json?.dictionary, let errors = json["errors"] as? [Any], let error = errors.first as? [String: Any], let message = error["message"] as? String {
+                            errorMessage = message
+                        }
 
-                        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+                        let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "OK", style: .default))
 
                         Navigator.presentModally(alert)

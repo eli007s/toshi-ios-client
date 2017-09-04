@@ -31,8 +31,7 @@ enum NetworkInfo {
     }
 
     struct Path {
-        static let RopstenTestNetwork = "https://ethereum.service.tokenbrowser.com"
-        static let ToshiTestNetwork = "https://token-eth-service-development.herokuapp.com"
+        static let RopstenTestNetwork = ToshiEthereumServiceBaseURLPath
     }
 }
 
@@ -43,12 +42,7 @@ public enum Network: String {
     case toshiTestNetwork = "116"
 
     var baseURL: String {
-        switch self {
-        case .ropstenTestNetwork:
-            return NetworkInfo.Path.RopstenTestNetwork
-        case .toshiTestNetwork:
-            return NetworkInfo.Path.ToshiTestNetwork
-        }
+        return ToshiEthereumServiceBaseURLPath
     }
 
     var label: String {

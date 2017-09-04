@@ -13,8 +13,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-let TokenRatingsServiceBaseURLPath = "https://token-rep-service-development.herokuapp.com"
-let TokenIdServiceBaseURLPath = "https://token-id-service-development.herokuapp.com"
-let TokenEthereumServiceBaseURLPath = "https://token-eth-service-development.herokuapp.com"
-let TokenDirectoryServiceBaseURLPath = "https://token-id-service-development.herokuapp.com"
-let ToshiExchangeRateServiceBaseURLPath = "https://toshi-exchangerate-service.herokuapp.com"
+let ToshiRatingsServiceBaseURLPath = "https://reputation.internal.service.toshi.org"
+let ToshiIdServiceBaseURLPath = "https://identity.internal.service.toshi.org"
+let ToshiEthereumServiceBaseURLPath = "https://ethereum.internal.service.toshi.org"
+let ToshiExchangeRateServiceBaseURLPath = "https://exchange.internal.service.toshi.org"
+let ToshiChatServiceBaseURLPath = "https://chat.internal.service.toshi.org"
+let ToshiWebviewRPCURLPath = "https://propsten.infura.io"

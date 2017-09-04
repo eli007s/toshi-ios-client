@@ -394,19 +394,19 @@ open class ProfileEditController: OverlayController, Editable {
             TokenUser.Constants.verified: user.verified
         ]
 
-        idAPIClient.updateUser(userDict) { userUpdated, message in
+        idAPIClient.updateUser(userDict) { [weak self] userUpdated, message in
 
             let cachedAvatar = AvatarManager.shared.cachedAvatar(for: user.avatarPath)
 
-            if let image = self.avatarImageView.image as UIImage?, image != cachedAvatar {
+            if let image = self?.avatarImageView.image as UIImage?, image != cachedAvatar {
 
-                self.idAPIClient.updateAvatar(image) { avatarUpdated in
+                self?.idAPIClient.updateAvatar(image) { [weak self] avatarUpdated in
                     let success = userUpdated == true && avatarUpdated == true
 
-                    self.completeEdit(success: success, message: message)
+                    self?.completeEdit(success: success, message: message)
                 }
             } else {
-                self.completeEdit(success: userUpdated, message: message)
+                self?.completeEdit(success: userUpdated, message: message)
             }
         }
     }

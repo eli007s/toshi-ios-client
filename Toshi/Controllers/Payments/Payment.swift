@@ -30,7 +30,7 @@ class PaymentManager {
             
             let signedTransaction = "0x\(Cereal.shared.signWithWallet(hex: transaction))"
             
-            EthereumAPIClient.shared.sendSignedTransaction(originalTransaction: transaction, transactionSignature: signedTransaction) { json, error in
+            EthereumAPIClient.shared.sendSignedTransaction(originalTransaction: transaction, transactionSignature: signedTransaction) { [weak self] json, error in
                 
                 guard let json = json?.dictionary else {
                     

@@ -56,6 +56,30 @@
     [AvatarManager.shared startDownloadContactsAvatars];
 }
 
+- (void)refreshContactWithAddress:(NSString *)address
+{
+    __weak typeof(self)weakSelf = self;
+    [[IDAPIClient shared] retrieveUserWithUsername:address completion:^(TokenUser * _Nullable contact) {
+
+        typeof(self)strongSelf = weakSelf;
+        [strongSelf refreshContact:contact];
+    }];
+}
+
+- (void)refreshContact:(TokenUser *)contact
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"address == %@", contact.address];
+    TokenUser *existingContact = [[self.tokenContacts filteredArrayUsingPredicate:predicate] firstObject];
+
+    NSUInteger index = [self.tokenContacts indexOfObject:existingContact];
+    if (index != NSNotFound) {
+        NSMutableArray *mutableContacts = self.tokenContacts.mutableCopy;
+        [mutableContacts replaceObjectAtIndex:index withObject:contact];
+
+        self.tokenContacts = mutableContacts.copy;
+    }
+}
+
 - (void)databaseChanged:(NSNotification *)notification
 {
     NSArray <NSNotification *> *notifications = [self.databaseConnection beginLongLivedReadTransaction];

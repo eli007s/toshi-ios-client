@@ -46,11 +46,11 @@ class BalanceController: UIViewController {
 
     fileprivate func fetchAndUpdateBalance() {
 
-        EthereumAPIClient.shared.getBalance(address: Cereal.shared.paymentAddress) { balance, error in
+        EthereumAPIClient.shared.getBalance(address: Cereal.shared.paymentAddress) { [weak self] balance, error in
             if let error = error {
                 Navigator.presentModally(UIAlertController.errorAlert(error as NSError))
             } else {
-                self.balance = balance
+                self?.balance = balance
             }
         }
     }

@@ -103,7 +103,7 @@ final class ChatsInteractor: NSObject {
             return
         }
 
-        idAPIClient.retrieveContact(username: tokenId) { user in
+        idAPIClient.retrieveUser(username: tokenId) { [weak self] user in
             guard let user = user else { return }
 
             let parameters: [String: Any] = [
@@ -112,7 +112,7 @@ final class ChatsInteractor: NSObject {
                 "value": value.toHexString
             ]
 
-            self.sendPayment(with: parameters, completion: completion)
+            self?.sendPayment(with: parameters, completion: completion)
         }
     }
 
@@ -123,12 +123,12 @@ final class ChatsInteractor: NSObject {
     }
 
     func sendPayment(with parameters: [String: Any], completion: ((Bool) -> Void)? = nil) {
-        etherAPIClient.createUnsignedTransaction(parameters: parameters) { transaction, error in
+        etherAPIClient.createUnsignedTransaction(parameters: parameters) { [weak self] transaction, error in
 
             guard let transaction = transaction as String? else {
                 if let error = error as Error? {
-                    self.output?.didFinishRequest()
-                    self.output?.didCatchError(error)
+                    self?.output?.didFinishRequest()
+                    self?.output?.didCatchError(error)
                     completion?(false)
                 }
 
@@ -137,17 +137,12 @@ final class ChatsInteractor: NSObject {
 
             let signedTransaction = "0x\(Cereal.shared.signWithWallet(hex: transaction))"
 
-            self.etherAPIClient.sendSignedTransaction(originalTransaction: transaction, transactionSignature: signedTransaction) { json, error in
+            self?.etherAPIClient.sendSignedTransaction(originalTransaction: transaction, transactionSignature: signedTransaction) { [weak self] json, error in
 
-                self.output?.didFinishRequest()
+                self?.output?.didFinishRequest()
 
                 if let error = error as Error? {
-                    var message = "Something went wrong"
-                    if let json = json?.dictionary as [String: Any]?, let jsonMessage = json["message"] as? String {
-                        message = jsonMessage
-                    }
-
-                    self.output?.didCatchError(error)
+                    self?.output?.didCatchError(error)
                     completion?(false)
 
                 } else if let json = json?.dictionary {
@@ -155,7 +150,7 @@ final class ChatsInteractor: NSObject {
                     guard let value = parameters["value"] as? String else { return }
 
                     let payment = SofaPayment(txHash: txHash, valueHex: value)
-                    self.sendMessage(sofaWrapper: payment)
+                    self?.sendMessage(sofaWrapper: payment)
 
                     completion?(true)
                 }

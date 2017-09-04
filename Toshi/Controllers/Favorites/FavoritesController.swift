@@ -297,13 +297,13 @@ open class FavoritesController: SweetTableController {
 
         print("Updating contact infor for address: \(address).")
 
-        self.idAPIClient.findContact(name: address) { contact in
+        self.idAPIClient.findContact(name: address) { [weak self] contact in
             if let contact = contact {
                 print("Added contact info for \(contact.username)")
 
-                self.tableView.beginUpdates()
-                self.tableView.reloadRows(at: [indexPath], with: .automatic)
-                self.tableView.endUpdates()
+                self?.tableView.beginUpdates()
+                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+                self?.tableView.endUpdates()
             }
         }
     }
@@ -467,9 +467,9 @@ extension FavoritesController: UISearchResultsUpdating {
             self.searchContacts = []
             self.tableView.reloadData()
         } else {
-            self.idAPIClient.searchContacts(name: text) { contacts in
-                self.searchContacts = contacts
-                self.tableView.reloadData()
+            self.idAPIClient.searchContacts(name: text) { [weak self] contacts in
+                self?.searchContacts = contacts
+                self?.tableView.reloadData()
             }
         }
     }

@@ -21,6 +21,15 @@ enum InputType: Int {
 
 enum ProfileEditItemType: Int {
     case none, username, displayName, about, location, visibility
+
+    var autocapitalizationType: UITextAutocapitalizationType {
+        switch self {
+        case .username:
+            return .none
+        default:
+            return .words
+        }
+    }
 }
 
 public struct ProfileEditSection {

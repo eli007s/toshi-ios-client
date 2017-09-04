@@ -57,42 +57,42 @@ class BrowseAllController: UITableViewController {
 
         switch contentSection {
         case .topRatedApps:
-            AppsAPIClient.shared.getTopRatedApps(limit: 100) { apps, error in
+            AppsAPIClient.shared.getTopRatedApps(limit: 100) { [weak self] apps, error in
                 if let error = error {
                     let alertController = UIAlertController.errorAlert(error as NSError)
                     Navigator.presentModally(alertController)
                 }
 
-                self.searchResults = apps ?? []
+                self?.searchResults = apps ?? []
             }
         case .featuredApps:
-            AppsAPIClient.shared.getFeaturedApps(limit: 100) { apps, error in
+            AppsAPIClient.shared.getFeaturedApps(limit: 100) { [weak self] apps, error in
                 if let error = error {
                     let alertController = UIAlertController.errorAlert(error as NSError)
                     Navigator.presentModally(alertController)
                 }
 
-                self.searchResults = apps ?? []
+                self?.searchResults = apps ?? []
             }
         case .topRatedPublicUsers:
-            IDAPIClient.shared.getTopRatedPublicUsers(limit: 100) { users, error in
+            IDAPIClient.shared.getTopRatedPublicUsers(limit: 100) { [weak self] users, error in
 
                 if let error = error {
                     let alertController = UIAlertController.errorAlert(error as NSError)
                     Navigator.presentModally(alertController)
                 }
 
-                self.searchResults = users ?? []
+                self?.searchResults = users
             }
         case .latestPublicUsers:
-            IDAPIClient.shared.getLatestPublicUsers(limit: 100) { users, error in
+            IDAPIClient.shared.getLatestPublicUsers(limit: 100) { [weak self] users, error in
 
                 if let error = error {
                     let alertController = UIAlertController.errorAlert(error as NSError)
                     Navigator.presentModally(alertController)
                 }
 
-                self.searchResults = users ?? []
+                self?.searchResults = users
             }
         }
     }

@@ -58,8 +58,6 @@ open class ChatsController: SweetTableController {
             self.loadMessages()
         } else {
             NotificationCenter.default.addObserver(self, selector: #selector(chatDBCreated(_:)), name: .ChatDatabaseCreated, object: nil)
-
-            showEmptyStateIfNeeded()
         }
     }
 
@@ -92,6 +90,7 @@ open class ChatsController: SweetTableController {
         tableView.alwaysBounceVertical = true
 
         adjustEmptyView()
+        makeEmptyView(hidden: true)
     }
 
     @objc fileprivate func chatDBCreated(_ notification: Notification) {
@@ -192,7 +191,7 @@ open class ChatsController: SweetTableController {
         if let thread = self.thread(at: indexPath), let address = thread.contactIdentifier() as String? {
             print("Updating contact infor for address: \(address).")
 
-            idAPIClient.retrieveContact(username: address) { contact in
+            idAPIClient.retrieveUser(username: address) { contact in
                 if let contact = contact {
                     print("Updated contact info for \(contact.username)")
                 }

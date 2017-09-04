@@ -31,6 +31,7 @@ final class ProfileEditConfigurator {
 
         cell.switchControl.isHidden = item.type != .visibility
         cell.textField.isHidden = item.type == .visibility
+        cell.textField.autocapitalizationType = item.type.autocapitalizationType
 
         cell.updater = self
     }

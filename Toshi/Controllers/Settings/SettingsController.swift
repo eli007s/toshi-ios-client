@@ -103,6 +103,7 @@ open class SettingsController: UIViewController {
         view.dataSource = self
         view.delegate = self
         view.tableFooterView = UIView()
+        view.preservesSuperviewLayoutMargins = true
 
         view.register(UITableViewCell.self)
 

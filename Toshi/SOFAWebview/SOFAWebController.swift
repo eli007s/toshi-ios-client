@@ -29,7 +29,7 @@ class SOFAWebController: UIViewController {
         return EthereumAPIClient.shared
     }
 
-    fileprivate let rcpUrl = "https://propsten.infura.io/"
+    fileprivate let rcpUrl = ToshiWebviewRPCURLPath
 
     fileprivate var callbackId = ""
 
@@ -210,7 +210,7 @@ extension SOFAWebController: WKScriptMessageHandler {
             }
 
             if let to = tx["to"] as? String {
-                IDAPIClient.shared.retrieveContact(username: to) { user in
+                IDAPIClient.shared.retrieveUser(username: to) { [weak self] user in
                     var userInfo = UserInfo(address: to, paymentAddress: to, avatarPath: nil, name: nil, username: to, isLocal: false)
 
                     if let user = user as TokenUser? {
@@ -219,7 +219,7 @@ extension SOFAWebController: WKScriptMessageHandler {
                         userInfo.name = user.name
                         userInfo.isLocal = true
                     }
-                    self.displayPaymentConfirmation(userInfo: userInfo, parameters: parameters)
+                    self?.displayPaymentConfirmation(userInfo: userInfo, parameters: parameters)
                 }
             } else {
                 let userInfo = UserInfo(address: "", paymentAddress: "", avatarPath: nil, name: "New Contract", username: "", isLocal: false)
@@ -238,7 +238,9 @@ extension SOFAWebController: WKScriptMessageHandler {
 
 extension SOFAWebController: PaymentPresentable {
     func paymentApproved(with parameters: [String: Any], userInfo _: UserInfo) {
-        etherAPIClient.createUnsignedTransaction(parameters: parameters) { transaction, _ in
+        etherAPIClient.createUnsignedTransaction(parameters: parameters) { [weak self] transaction, _ in
+            guard let strongSelf = self else { return }
+
             var payload: String
 
             if let tx = transaction {
@@ -248,7 +250,7 @@ extension SOFAWebController: PaymentPresentable {
                 payload = "{\\\"error\\\": \\\"Error constructing tx skeleton\\\", \\\"result\\\": null}"
             }
 
-            self.jsCallback(callbackId: self.callbackId, payload: payload)
+            strongSelf.jsCallback(callbackId: strongSelf.callbackId, payload: payload)
         }
     }
 

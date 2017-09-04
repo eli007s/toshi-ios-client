@@ -97,34 +97,34 @@ extension ScannerController: PaymentPresentable {
 
         showActivityIndicator()
 
-        EthereumAPIClient.shared.createUnsignedTransaction(parameters: parameters) { transaction, error in
+        EthereumAPIClient.shared.createUnsignedTransaction(parameters: parameters) { [weak self] transaction, error in
 
             guard let transaction = transaction as String? else {
-                self.hideActivityIndicator()
-                self.showErrorAlert()
-                self.startScanning()
+                self?.hideActivityIndicator()
+                self?.showErrorAlert()
+                self?.startScanning()
 
                 return
             }
 
             let signedTransaction = "0x\(Cereal.shared.signWithWallet(hex: transaction))"
 
-            EthereumAPIClient.shared.sendSignedTransaction(originalTransaction: transaction, transactionSignature: signedTransaction) { json, error in
+            EthereumAPIClient.shared.sendSignedTransaction(originalTransaction: transaction, transactionSignature: signedTransaction) { [weak self] json, error in
 
-                self.hideActivityIndicator()
+                self?.hideActivityIndicator()
 
                 guard let json = json?.dictionary else {
-                    self.showErrorAlert()
-                    self.startScanning()
+                    self?.showErrorAlert()
+                    self?.startScanning()
 
                     return
                 }
 
                 if error != nil {
-                    self.presentPaymentError(error: error, json: json)
+                    self?.presentPaymentError(error: error, json: json)
                 } else {
-                    self.presentSuccessAlert { _ in
-                        self.startScanning()
+                    self?.presentSuccessAlert { [weak self] _ in
+                        self?.startScanning()
                     }
                 }
             }

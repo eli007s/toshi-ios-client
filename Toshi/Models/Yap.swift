@@ -49,15 +49,20 @@ public final class Yap: NSObject, Singleton {
     public var mainConnection: YapDatabaseConnection?
 
     public static let sharedInstance = Yap()
-    public static var isCurrentUserDataAccessible: Bool {
+    public static var isUserDatabaseFileAccessible: Bool {
         return FileManager.default.fileExists(atPath: UserDB.dbFilePath)
+    }
+
+    public static var isUserDatabasePasswordAccessible: Bool {
+        return UserDefaults.standard.bool(forKey: UserDB.password)
     }
 
     private override init() {
         super.init()
 
-        if Yap.isCurrentUserDataAccessible {
+        if Yap.isUserDatabaseFileAccessible {
             createDBForCurrentUser()
+            IDAPIClient.shared.updateContacts()
         }
     }
 
@@ -74,6 +79,7 @@ public final class Yap: NSObject, Singleton {
            dbPassowrd = keychain.getData(address) ?? Randomness.generateRandomBytes(60).base64EncodedString().data(using: .utf8)!
         }
         keychain.set(dbPassowrd, forKey: UserDB.password, withAccess: .accessibleAfterFirstUnlockThisDeviceOnly)
+        UserDefaults.standard.set(true, forKey: UserDB.password)
 
         createDBForCurrentUser()
 
@@ -86,6 +92,7 @@ public final class Yap: NSObject, Singleton {
     public func wipeStorage() {
         if TokenUser.current?.verified == false {
             KeychainSwift().delete(UserDB.password)
+            UserDefaults.standard.removeObject(forKey: UserDB.password)
 
             self.deleteFileIfNeeded(at: UserDB.dbFilePath)
             self.deleteFileIfNeeded(at: UserDB.walFilePath)
@@ -100,9 +107,6 @@ public final class Yap: NSObject, Singleton {
     fileprivate func createDBForCurrentUser() {
         let options = YapDatabaseOptions()
         options.corruptAction = .fail
-
-        let keychain = KeychainSwift()
-        keychain.synchronizable = false
 
         options.cipherKeyBlock = {
             let keychain = KeychainSwift()
@@ -160,6 +164,7 @@ public final class Yap: NSObject, Singleton {
         try? FileManager.default.moveItem(atPath: UserDB.dbFilePath, toPath: UserDB.Backup.dbFilePath)
 
         KeychainSwift().delete(UserDB.password)
+        UserDefaults.standard.removeObject(forKey: UserDB.password)
     }
 
     /// Insert a object into the database using the main thread default connection.
@@ -170,8 +175,10 @@ public final class Yap: NSObject, Singleton {
     ///   - collection: Optional. The name of the collection the object belongs to. Helps with organisation.
     ///   - metadata: Optional. Any serialisable object. Could be a related object, a description, a timestamp, a dictionary, and so on.
     public final func insert(object: Any?, for key: String, in collection: String? = nil, with metadata: Any? = nil) {
-        mainConnection?.asyncReadWrite { transaction in
-            transaction.setObject(object, forKey: key, inCollection: collection, withMetadata: metadata)
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.mainConnection?.asyncReadWrite { transaction in
+                transaction.setObject(object, forKey: key, inCollection: collection, withMetadata: metadata)
+            }
         }
     }
 

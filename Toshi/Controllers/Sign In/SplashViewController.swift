@@ -28,7 +28,7 @@ final class SplashViewController: UIViewController {
         let imageView = UIImageView(withAutoLayout: true)
         imageView.contentMode = .scaleAspectFill
         imageView.isUserInteractionEnabled = true
-        imageView.image = UIImage(named: "splash")
+        imageView.image = UIImage(named: "launch-screen")
 
         return imageView
     }()
@@ -97,14 +97,6 @@ final class SplashViewController: UIViewController {
         decorateView()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        UIView.animate(withDuration: 0.2) {
-            self.view.alpha = 1.0
-        }
-    }
-
     private func decorateView() {
         view.addSubview(backgroundImageView)
         backgroundImageView.fillSuperview()
@@ -133,8 +125,6 @@ final class SplashViewController: UIViewController {
         newAccountButton.set(height: 44.0)
         newAccountButton.centerXAnchor.constraint(equalTo: backgroundImageView.centerXAnchor).isActive = true
         newAccountButton.bottomAnchor.constraint(equalTo: signinButton.topAnchor, constant: -20.0).isActive = true
-
-        view.alpha = 0.0
     }
 
     @objc private func signinPressed(_: UIButton) {
@@ -143,8 +133,11 @@ final class SplashViewController: UIViewController {
     }
 
     @objc private func newAccountPressed(_: UIButton) {
-        dismiss(animated: true) {
-            (UIApplication.shared.delegate as? AppDelegate)?.createNewUser()
-        }
+        (UIApplication.shared.delegate as? AppDelegate)?.createNewUser()
+        dismiss(animated: true, completion: nil)
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 }

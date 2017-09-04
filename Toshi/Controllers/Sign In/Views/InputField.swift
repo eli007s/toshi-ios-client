@@ -115,6 +115,7 @@ class InputField: UIView {
 
         if self.type == .username {
             bottomSeparatorView.isHidden = true
+            self.textField.autocapitalizationType = .none
         } else {
             topSeparatorView.isHidden = true
             shortBottomSeparatorView.isHidden = true

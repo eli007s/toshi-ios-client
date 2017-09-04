@@ -290,8 +290,8 @@ open class ProfileController: UIViewController {
     fileprivate func updateReputation() {
         guard let currentUser = TokenUser.current as TokenUser? else { return }
 
-        RatingsClient.shared.scores(for: currentUser.address) { ratingScore in
-            self.reputationView.setScore(ratingScore)
+        RatingsClient.shared.scores(for: currentUser.address) { [weak self] ratingScore in
+            self?.reputationView.setScore(ratingScore)
         }
     }
 

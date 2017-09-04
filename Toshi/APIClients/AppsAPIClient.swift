@@ -24,7 +24,7 @@ public class AppsAPIClient: NSObject, CacheExpiryDefault {
     private var teapot: Teapot
 
     override init() {
-        teapot = Teapot(baseURL: URL(string: TokenDirectoryServiceBaseURLPath)!)
+        teapot = Teapot(baseURL: URL(string: ToshiIdServiceBaseURLPath)!)
     }
 
     convenience init(teapot: Teapot) {
