@@ -19,6 +19,7 @@
 /* Messages */
 "messages_payment_approve" = "Approve";
 "messages_payment_decline" = "Decline";
+"messages_sent_error" = "Not delivered Tap to retry";
 
 /* Balance */
 "balance-navigation-title" = "Balance";

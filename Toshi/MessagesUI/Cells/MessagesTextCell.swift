@@ -43,6 +43,11 @@ class MessagesTextCell: MessagesBasicCell {
             bubbleView.backgroundColor = isOutGoing ? Theme.tintColor : Theme.incomingMessageBackgroundColor
         }
     }
+    
+    override func showSentError(_ show: Bool, animated: Bool) {
+        super.showSentError(show, animated: animated)
+        textView.isUserInteractionEnabled = !show
+    }
 
     fileprivate lazy var usernameDetector: NSRegularExpression = {
         do {
