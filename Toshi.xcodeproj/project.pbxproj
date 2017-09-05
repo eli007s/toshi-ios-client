@@ -1835,6 +1835,7 @@
 		D197B9D646686EF7FE2D78B8 /* UINotificationName+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B669EF87D9D6642E12BA /* UINotificationName+Additions.swift */; };
 		D197B9DDD90826832295B645 /* getRate.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B079DCC1F4C2498E14C7 /* getRate.json */; };
 		D197BA0569377AF2E56C7393 /* getFeaturedApps.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B86A198E11D1255A9721 /* getFeaturedApps.json */; };
+		D197BA152D55C2FF699005E2 /* FailingEthereumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B727C43C98F9065561F9 /* FailingEthereumTests.swift */; };
 		D197BA6E5DC09E84D524D1A2 /* getBalance.json in Resources */ = {isa = PBXBuildFile; fileRef = D197B003D276C7AD76B6A223 /* getBalance.json */; };
 		D197BB5265BB1DA3032B68AA /* ExchangeRateAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197BDA113837D7DCFE1A66F /* ExchangeRateAPIClientTests.swift */; };
 		D197BC32BA4D952C0E815F18 /* ActiveNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D197B6E47F5F979A8C154E9A /* ActiveNetworkView.swift */; };
@@ -2936,6 +2937,7 @@
 		D197B6D88C3CCC7B7A890925 /* RatingsClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingsClientTests.swift; sourceTree = "<group>"; };
 		D197B6E47F5F979A8C154E9A /* ActiveNetworkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveNetworkView.swift; sourceTree = "<group>"; };
 		D197B707B59B3F92F8A4B3EC /* getLatestPublicUsers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getLatestPublicUsers.json; sourceTree = "<group>"; };
+		D197B727C43C98F9065561F9 /* FailingEthereumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FailingEthereumTests.swift; sourceTree = "<group>"; };
 		D197B7EC7030BE4C4508AACD /* EthereumConverterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EthereumConverterTests.swift; sourceTree = "<group>"; };
 		D197B86A198E11D1255A9721 /* getFeaturedApps.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getFeaturedApps.json; sourceTree = "<group>"; };
 		D197B8E798FCD39B97824BBA /* retrieveUser.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = retrieveUser.json; sourceTree = "<group>"; };
@@ -3147,6 +3149,7 @@
 				D197BF87696253A90F28E651,
 				14147EA51E8119F0006BD47B /* Info.plist */,
 				84C459011F41B7AA00D534B8 /* QRCodeIntentTests.swift */,
+				D197B727C43C98F9065561F9 /* FailingEthereumTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -5396,6 +5399,7 @@
 				D197B54E550A80E09BFE6501 /* RatingsClient.swift in Sources */,
 				D197BD179C71B127A7315785,
 				D197BB5265BB1DA3032B68AA /* ExchangeRateAPIClientTests.swift in Sources */,
+				D197BA152D55C2FF699005E2 /* FailingEthereumTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
