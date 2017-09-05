@@ -38,6 +38,12 @@ class EthereumConverterTests: QuickSpec {
                     expect(ethereumValueString).to(equal(dollarSting))
                 }
 
+                it("gets the fiat value for wei") {
+                    let fiat = EthereumConverter.fiatValueForWei(wei, exchangeRate: exchangeRate)
+
+                    expect(fiat).to(equal(100.0))
+                }
+
                 context("balance sparse attributed string") {
                     let fontAttribute = [NSFontAttributeName: UIFont.systemFont(ofSize: 19.0)]
                     let ethereumValueString = EthereumConverter.balanceSparseAttributedString(forWei: wei, exchangeRate: exchangeRate, width: 100.0, attributes: fontAttribute)
