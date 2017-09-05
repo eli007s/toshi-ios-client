@@ -52,7 +52,7 @@ struct EthereumConverter {
         return "\(numberFormatter.string(from: balance)!) ETH"
     }
 
-    /// String representation in eht for a given wei value.
+    /// String representation in eht for a given wei value for a given exchange rate.
     /// Example:
     ///     ethereumValueString(forWei: halfEthInWei) -> "0.5 ETH"
     ///
@@ -62,14 +62,13 @@ struct EthereumConverter {
         return ethereumValueString(forEther: balance.dividing(by: weisToEtherConstant).rounding(accordingToBehavior: NSDecimalNumber.weiRoundingBehavior))
     }
 
-    /// The fiat currency string representation for a given wei value
+    /// The fiat currency string representation for a given wei value for a given exchange rate.
     ///
     /// - Parameter balance: value in wei
-    /// - Returns: fiat string represetation: "$10.50"
+    /// - Parameter exchangeRate: the current exchangeRate
+    /// - Returns: fiat string representation: "$10.50"
     public static func fiatValueString(forWei balance: NSDecimalNumber, exchangeRate: Decimal) -> String {
-        let ether = balance.dividing(by: weisToEtherConstant)
-        let currentFiatConversion = NSDecimalNumber(decimal: exchangeRate)
-        let fiat: NSDecimalNumber = ether.multiplying(by: currentFiatConversion)
+        let fiat = fiatValueForWei(balance, exchangeRate: exchangeRate)
 
         let locale = TokenUser.current?.cachedCurrencyLocale ?? Locale(identifier: forcedLocale)
         let numberFormatter = NumberFormatter()
@@ -82,13 +81,12 @@ struct EthereumConverter {
     /// Fiat currency value string with redundant 3 letter code. "$4.99 USD"
     ///
     /// - Parameter balance: the value in wei
+    /// - Parameter exchangeRate: the current exchangeRate
     /// - Returns: the fiat currency value with redundant 3 letter code for clarity.
     public static func fiatValueStringWithCode(forWei balance: NSDecimalNumber, exchangeRate: Decimal) -> String {
         let locale = TokenUser.current?.cachedCurrencyLocale ?? Locale(identifier: forcedLocale)
 
-        let ether = balance.dividing(by: weisToEtherConstant)
-        let currentFiatConversion = NSDecimalNumber(decimal: exchangeRate)
-        let fiat: NSDecimalNumber = ether.multiplying(by: currentFiatConversion)
+        let fiat = fiatValueForWei(balance, exchangeRate: exchangeRate)
 
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
@@ -97,6 +95,18 @@ struct EthereumConverter {
         let fiatValueString = numberFormatter.string(from: fiat)!
 
         return numberFormatter.currencySymbol == numberFormatter.currencyCode ? fiatValueString : "\(fiatValueString) \(locale.currencyCode!)"
+    }
+
+    /// Fiat value for  a given wei value for a given exchange rate
+    ///
+    /// - Parameter balance: the value in wei
+    /// - Parameter exchangeRate: the current exchangeRate
+    /// - Returns: the fiat currency value
+    public static func fiatValueForWei(_ balance: NSDecimalNumber, exchangeRate: Decimal) -> NSDecimalNumber {
+        let ether = balance.dividing(by: weisToEtherConstant)
+        let currentFiatConversion = NSDecimalNumber(decimal: exchangeRate)
+
+        return ether.multiplying(by: currentFiatConversion)
     }
 
     /// Complete formatted string value for a given wei, with fiat aligned left and eth aligned right.
