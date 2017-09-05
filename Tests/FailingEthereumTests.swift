@@ -4,25 +4,30 @@ import Quick
 import Nimble
 
 //swiftlint:disable force_cast
-class EthereumConverterTests: QuickSpec {
+class FailingEthereumConverterTests: QuickSpec {
 
+    let weisToEtherConstant = NSDecimalNumber(string: "1000000000000000000")
+    
     override func spec() {
         describe("the Ethereum Converter") {
             context("overflowing tests") {
-                let exchangeRate: Decimal = 0.02311
-                let wei: NSDecimalNumber = 1000000000000000000
 
-                it("returns a string representation in eht for a given wei value") {
-                    let ethereumValueString = EthereumConverter.ethereumValueString(forWei: wei)
+                for i in 0...1000 {
+                    var randomDecimalPart1 = Decimal(arc4random_uniform(1000000000))
+                    let randomDecimalPart2 = Decimal(arc4random_uniform(1000000000))
 
-                    expect(ethereumValueString).to(equal("1.0000 ETH"))
-                }
+                    randomDecimalPart1.multiply(by: randomDecimalPart2)
+                    let exchangeRate: Decimal = randomDecimalPart1 / Decimal(1000000000000000000)
 
-                it("returns fiat currency value string with redundant 3 letter code") {
-                    let ethereumValueString = EthereumConverter.fiatValueStringWithCode(forWei: wei, exchangeRate: exchangeRate)
+                    let wei = NSDecimalNumber(decimal: 3809088485125510208453626017697492.5299999999999488)
 
-                    let dollarSting = String(format: "$100%@00 USD", TokenUser.current?.cachedCurrencyLocale?.decimalSeparator ?? ".")
-                    expect(ethereumValueString).to(equal(dollarSting))
+                    it("gets the fiat value for wei") {
+                        let fiat = EthereumConverter.fiatValueForWei(wei, exchangeRate: exchangeRate)
+                        print("RESULT FIAT ==== \(fiat)")
+                        print("")
+
+                        expect(fiat).toNot(be(0))
+                    }
                 }
             }
         }
