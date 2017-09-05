@@ -15,16 +15,24 @@ class FailingEthereumConverterTests: QuickSpec {
                 for i in 0...1000 {
                     var randomDecimalPart1 = Decimal(arc4random_uniform(1000000000))
                     let randomDecimalPart2 = Decimal(arc4random_uniform(1000000000))
+                    let randomDecimalPart3 = Decimal(arc4random_uniform(arc4random_uniform(10000)))
 
                     randomDecimalPart1.multiply(by: randomDecimalPart2)
-                    let exchangeRate: Decimal = randomDecimalPart1 / Decimal(1000000000000000000)
+                    randomDecimalPart1.multiply(by: randomDecimalPart3)
+                    let randomExchangeRate: Decimal = randomDecimalPart1 / Decimal(1000000000000000000)
 
-                    let wei = NSDecimalNumber(decimal: 3809088485125510208453626017697492.5299999999999488)
+                    var randomWeiPart1 = Decimal(arc4random_uniform(1000000000))
+                    let randomWeiPart2 = Decimal(arc4random_uniform(arc4random_uniform(1000000000)))
+
+                    randomWeiPart1.multiply(by: randomWeiPart2)
+                    
+                    let randomWei = NSDecimalNumber(decimal: randomDecimalPart1 / Decimal(10000))
 
                     it("gets the fiat value for wei") {
-                        let fiat = EthereumConverter.fiatValueForWei(wei, exchangeRate: exchangeRate)
-                        print("RESULT FIAT ==== \(fiat)")
-                        print("")
+                        let fiat = EthereumConverter.fiatValueForWei(randomWei, exchangeRate: randomExchangeRate)
+                        print("exchangeRate \t\t==== \(randomExchangeRate)")
+                        print("wei \t\t\t\t==== \(randomWei)")
+                        print("fiat \t\t\t\t==== \(fiat) \n\n")
 
                         expect(fiat).toNot(be(0))
                     }
