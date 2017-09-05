@@ -30,9 +30,13 @@ class FailingEthereumConverterTests: QuickSpec {
 
                     it("gets the fiat value for wei") {
                         let fiat = EthereumConverter.fiatValueForWei(randomWei, exchangeRate: randomExchangeRate)
+                        let string = EthereumConverter.fiatValueString(forWei: randomWei, exchangeRate: randomExchangeRate)
+                        let currency = EthereumConverter.fiatValueStringWithCode(forWei: randomWei, exchangeRate: randomExchangeRate)
                         print("exchangeRate \t\t==== \(randomExchangeRate)")
                         print("wei \t\t\t\t==== \(randomWei)")
-                        print("fiat \t\t\t\t==== \(fiat) \n\n")
+                        print("fiat \t\t\t\t==== \(fiat)")
+                        print("string \t\t\t\t==== \(string)")
+                        print("currency \t\t\t==== \(string) \n\n")
 
                         expect(fiat).toNot(be(0))
                     }
