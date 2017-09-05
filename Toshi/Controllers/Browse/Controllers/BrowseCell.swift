@@ -95,9 +95,9 @@ class BrowseCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-
-        backgroundColor = nil
-        isOpaque = false
+        
+        contentView.clipsToBounds = true
+        backgroundColor = Theme.viewBackgroundColor
 
         addSubviewsAndConstraints()
     }

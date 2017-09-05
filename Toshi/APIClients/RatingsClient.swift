@@ -83,6 +83,11 @@ class RatingsClient: NSObject {
 
     public var baseURL: URL
 
+    convenience init(teapot: Teapot) {
+        self.init()
+        self.teapot = teapot
+    }
+
     private override init() {
         baseURL = URL(string: ToshiRatingsServiceBaseURLPath)!
         teapot = Teapot(baseURL: baseURL)
@@ -90,24 +95,32 @@ class RatingsClient: NSObject {
         super.init()
     }
 
-    private func fetchTimestamp(_ completion: @escaping ((_ timestamp: Int) -> Void)) {
+    private func fetchTimestamp(_ completion: @escaping ((_ timestamp: Int?, _ message: String?) -> Void)) {
         self.teapot.get("/v1/timestamp") { (result: NetworkResult) in
             switch result {
             case .success(let json, _):
+
                 guard let json = json?.dictionary, let timestamp = json["timestamp"] as? Int else {
                     print("Invalid response - Fetch timestamp")
+                    completion(nil, "Invalid response - Fetch timestamp")
                     return
                 }
 
-                completion(timestamp)
-            case .failure(_, _, _):
-                completion(0)
+                completion(timestamp, nil)
+            case .failure(_, _, let error):
+                completion(nil, "Error fetching timestamp: \(error)")
+                
             }
         }
     }
 
-    public func submit(userId: String, rating: Int, review: String, completion: @escaping (() -> Void) = { _ in }) {
-        fetchTimestamp { timestamp in
+    public func submit(userId: String, rating: Int, review: String, completion: @escaping ((_ success: Bool, _ message: String) -> Void)) {
+        fetchTimestamp { timestamp, message in
+
+            guard let timestamp = timestamp else {
+                completion(false, message ?? "")
+                return
+            }
             let cereal = Cereal.shared
             let path = "/v1/review/submit"
             let payload: [String: Any] = [
@@ -117,11 +130,8 @@ class RatingsClient: NSObject {
             ]
 
             guard let data = try? JSONSerialization.data(withJSONObject: payload, options: []), let payloadString = String(data: data, encoding: .utf8) else {
-                let alert = UIAlertController(title: "Error", message: "Invalid payload, request could not be executed", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                completion(false, "Invalid payload, request could not be executed")
 
-                Navigator.presentModally(alert)
-                completion()
                 return
             }
 
@@ -135,22 +145,14 @@ class RatingsClient: NSObject {
                 DispatchQueue.main.async {
                     switch result {
                     case .success:
-                        let alert = UIAlertController(title: "Success", message: "User succesfully reviewed.", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .default))
-
-                        Navigator.presentModally(alert)
-                        completion()
+                        completion(true, "")
                     case .failure(let json, _, _):
-                        var errorMessage = Localized("request_generic_error")
-                        if let json = json?.dictionary, let errors = json["errors"] as? [Any], let error = errors.first as? [String: Any], let message = error["message"] as? String {
-                            errorMessage = message
+                        guard let json = json?.dictionary, let errors = json["errors"] as? [Any], let error = errors.first as? [String: Any], let message = error["message"] as? String else {
+                            completion(false, "Unknown error")
+                            return
                         }
 
-                        let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .default))
-
-                        Navigator.presentModally(alert)
-                        completion()
+                        completion(false, message)
                     }
                 }
             }

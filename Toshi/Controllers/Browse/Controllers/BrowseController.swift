@@ -67,7 +67,6 @@ class BrowseController: SearchableCollectionController {
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 230)
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
 
@@ -86,6 +85,7 @@ class BrowseController: SearchableCollectionController {
         collectionView.contentInset = UIEdgeInsets(top: searchBar.frame.height, left: 0, bottom: 0, right: 0)
         collectionView.setCollectionViewLayout(layout, animated: false)
         collectionView.register(BrowseCell.self)
+        collectionView.delegate = self
 
         searchBar.delegate = self
         searchBar.barTintColor = Theme.viewBackgroundColor
@@ -317,6 +317,16 @@ extension BrowseController: UISearchBarDelegate {
         }
 
         return items.count
+    }
+}
+
+extension BrowseController {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let numberOfItems = items[indexPath.row].count
+        let itemHeight: CGFloat = (numberOfItems == 0) ? 0 : 230
+        
+        return CGSize(width: UIScreen.main.bounds.width, height: itemHeight)
     }
 }
 
